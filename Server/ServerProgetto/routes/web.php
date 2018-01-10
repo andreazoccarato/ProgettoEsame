@@ -14,5 +14,3 @@
 Route::get('/welcome', function () {
     return view('welcome');
 });
-
-Route::post('/login',array('uses'=>'Login@autenticazione'));
