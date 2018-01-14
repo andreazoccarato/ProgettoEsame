@@ -13,7 +13,9 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('login', 'Api\Auth\LoginController@login');
+Route::post('login', 'Api\Auth\LoginController@login')->name('login');
+
+
 Route::middleware('auth:api')->group(function () {
     Route::get('posts', 'Api\PostController@index');
 });

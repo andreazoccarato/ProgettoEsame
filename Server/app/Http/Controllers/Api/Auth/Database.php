@@ -1,12 +1,28 @@
 <?php
+namespace App\Http\Controllers\Api\Auth;
+use PDO;
 
-class Database extends PDO {
-
+class Database{
+    
     private $conn;
     private $preparedStatement;
+    private $args;
 
-    function Database() {
-        $this->conn = new PDO('mysql:host=localhost;dbname=dbProgettoEsame');
+    function _construct($arguments){
+        $this->args=$arguments;
+        $this->conn=null;
+    }
+    
+    function connect(){
+        if($this->conn==null){
+            $this->conn = new PDO($this->args);
+        }
+    }
+    
+    function disconnect(){
+        if($this->conn!=null){
+           $this->conn=null; 
+        }       
     }
 
     function existStud($nome, $cognome) {
@@ -123,5 +139,3 @@ class Database extends PDO {
     }
 
 }
-
-?>
