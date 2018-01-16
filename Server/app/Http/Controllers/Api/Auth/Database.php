@@ -1,33 +1,35 @@
 <?php
+
 namespace App\Http\Controllers\Api\Auth;
+
 use PDO;
 
-class Database{
-    
+class Database {
+
     private $conn;
     private $preparedStatement;
-    private $args;
 
-    function _construct($arguments){
-        $this->args=$arguments;
-        $this->conn=null;
+    function _construct() {
+        $this->conn = null;
     }
-    
-    function connect(){
-        if($this->conn==null){
-            $this->conn = new PDO($this->args);
+
+    function connect() {
+        if ($this->conn == null) {
+            $this->conn = new PDO('sqlite:../storage/dbProgettoEsame.sqlite');
         }
     }
-    
-    function disconnect(){
-        if($this->conn!=null){
-           $this->conn=null; 
-        }       
+
+    function disconnect() {
+        if ($this->conn != null) {
+            $this->conn = null;
+        }
     }
 
     function existStud($nome, $cognome) {
-        $qry = "SELECT Studente.* FROM Studente WHERE Nome='" . $nome . "' AND Cognome='" . $cognome . "'";
-        if ($this->conn->exec($qry) == 1) {
+        $qry = "SELECT count(*) FROM Studente WHERE Nome='" . $nome . "' AND Cognome='" . $cognome . "'";
+        $result = $this->conn->query($qry);
+        $count = $result->fetchColumn(0);
+        if ($count!=0) {
             return true;
         } else {
             return false;
@@ -35,8 +37,10 @@ class Database{
     }
 
     function existStudByCF($CodiceFiscale) {
-        $qry = "SELECT Studente.* FROM Studente WHERE CodiceFiscale='" . $CodiceFiscale . "'";
-        if ($this->conn->exec($qry) == 1) {
+        $qry = "SELECT count(*) FROM Studente WHERE CodiceFiscale='" . $CodiceFiscale . "'";
+        $result = $this->conn->query($qry);
+        $count = $result->fetchColumn(0);
+        if ($count!=0) {
             return true;
         } else {
             return false;
@@ -44,8 +48,10 @@ class Database{
     }
 
     function existDoc($nome, $cognome) {
-        $qry = "SELECT Docente.* FROM Docente WHERE Nome='" . $nome . "' AND Cognome='" . $cognome . "'";
-        if ($this->conn->exec($qry) == 1) {
+        $qry = "SELECT count(*) FROM Docente WHERE Nome='" . $nome . "' AND Cognome='" . $cognome . "'";
+        $result = $this->conn->query($qry);
+        $count = $result->fetchColumn(0);
+        if ($count!=0) {
             return true;
         } else {
             return false;
@@ -53,8 +59,10 @@ class Database{
     }
 
     function existDocByCF($CodiceFiscale) {
-        $qry = "SELECT Docente.* FROM Docente WHERE CodiceFiscale='" . $CodiceFiscale . "'";
-        if ($this->conn->exec($qry) == 1) {
+        $qry = "SELECT count(*) FROM Docente WHERE CodiceFiscale='" . $CodiceFiscale . "'";
+        $result = $this->conn->query($qry);
+        $count = $result->fetchColumn(0);
+        if ($count!=0) {
             return true;
         } else {
             return false;
@@ -62,15 +70,17 @@ class Database{
     }
 
     function login($username, $password) {
-        $qryLogin = "SELECT Credenziali.* FROM Credenziali WHERE Username='" . $username . "' AND Password='" . $password . "'";
-        if ($this->conn->exec($qryLogin) == 1) {
-            $result = $this->conn->query(qryLogin);
-            $CF = $result['CodiceFiscale'];
-            if (existDocByCF($CF)) {
-                return "Docente";
-            } else if (existStudByCF($CF)) {
-                return "Studente";
-            }
+        echo ' ' . $username . ' ';
+        echo ' ' . $password . ' ';
+        $qryLogin = "SELECT Studente.CodiceFiscale FROM Credenziali INNER JOIN Studente ON Credenziali.ID=Studente.IdCredenziali WHERE Username='" . $username . "' AND Password='" . $password . "'";
+        $result = $this->conn->query($qryLogin);
+        
+        $CF = $result->fetchColumn(0);
+        echo ' ' . $CF . ' ';
+        if ($this->existDocByCF($CF)) {
+            return "Docente";
+        } else if ($this->existStudByCF($CF)) {
+            return "Studente";
         } else {
             return "Username e/o Password errati";
         }

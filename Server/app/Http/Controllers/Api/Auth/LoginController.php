@@ -14,23 +14,17 @@ class LoginController extends Controller {
     private $database;
 
     public function __construct() {
-        $pathToDatabase='database\dbProgettoEsame.sqlite';
         $this->client = Client::find(1);
-        $this->database = new Database("sqlite:/" . $pathToDatabase);
+        $this->database = new Database();
     }
 
     public function login(Request $request) {
-        echo 'Dentro Login';
         $this->database->connect();
 
         $username = $request->input('username');
         $password = $request->input('password');
-        echo "Username: " . $username;
-        echo "Password: " . $password;
-
 
         $app = $this->database->login($username, $password);
-        $this->database->disconnect();
         if ($app === 'Docente') {
             $this->risposta('Docente');
         } else if ($app === 'Studente') {
@@ -42,6 +36,7 @@ class LoginController extends Controller {
 
     private function risposta($ruolo) {
         echo "Ruolo: " . $ruolo;
+        $this->database->disconnect();
         return response()->json([
                     'Ruolo' => '' . $ruolo . ''
         ]);

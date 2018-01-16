@@ -8,11 +8,11 @@ class CredenzialiSeeder extends Seeder {
         DB::table('Credenziali')->delete();
         DB::table('Credenziali')->insert(array(
             'Username' => 'andrea',
-            'Password' => Hash::make('andreaz001'),
+            'Password' => 'andreaz001',
         ));
         DB::table('Credenziali')->insert(array(
             'Username' => 'csal',
-            'Password' => Hash::make('csal001'),
+            'Password' => 'csal001',
         ));
     }
 

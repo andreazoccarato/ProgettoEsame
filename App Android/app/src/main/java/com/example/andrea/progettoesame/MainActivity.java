@@ -6,12 +6,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,18 +62,8 @@ public class MainActivity extends AppCompatActivity {
         //this is the url where you want to send the request
         String url = "http://192.168.1.104:8000/api/login";
 
-
-        JSONObject post = new JSONObject();
-        try {
-            post.put("username", username);
-            post.put("password", password);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        System.out.println(post.toString());
-
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,
-                url, post,
+                url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -76,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("------------RISPOSTA------------");
                         System.out.println(response.toString());
                         try {
-                            String app = response.getString("Ruolo");
+                            JSONArray arr=response.getJSONArray("Ruolo");
+                            String app = arr.getString(0);
                             correctLogin = true;
                             Toast.makeText(MainActivity.this, app, Toast.LENGTH_SHORT).show();
                             if (response.equals("Studente")) {
@@ -96,7 +92,16 @@ public class MainActivity extends AppCompatActivity {
                         error.printStackTrace();
                         correctLogin = false;
                     }
-                });
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
+                params.put("password", password);
+
+                return params;
+            }
+        };
 
         // Adding the request to the queue along with a unique string tag
         jsObjRequest.setTag("postRequest");
