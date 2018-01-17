@@ -35,7 +35,8 @@ class LoginController extends Controller {
     }
 
     private function risposta($ruolo) {
-        echo "Ruolo: " . $ruolo;
+        echo response()->json([
+                    'Ruolo' => '' . $ruolo . '']);
         $this->database->disconnect();
         return response()->json([
                     'Ruolo' => '' . $ruolo . ''

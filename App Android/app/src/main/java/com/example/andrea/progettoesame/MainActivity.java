@@ -14,7 +14,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*
     private void loginToServer(final String username, final String password) {
         //this is the url where you want to send the request
         String url = "http://192.168.1.104:8000/api/login";
@@ -69,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
 
                         System.out.println("------------RISPOSTA------------");
-                        System.out.println(response.toString());
+                        System.out.println("-----------------------------------------------------------------"+response.toString());
                         try {
                             JSONArray arr=response.getJSONArray("Ruolo");
                             String app = arr.getString(0);
@@ -106,8 +109,56 @@ public class MainActivity extends AppCompatActivity {
         // Adding the request to the queue along with a unique string tag
         jsObjRequest.setTag("postRequest");
         MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
+    }
+    */
 
+    private void loginToServer(final String username, final String password) {
+        String url = "http://192.168.1.104:8000/api/login";
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("------------RISPOSTA------------");
+                        System.out.println("----------------------------------------"+response);
+                        String json="";
+                        for (int i=response.length()-1;i>0;i--){
+                            if(response.charAt(i)=='{'){
+                                json=response.substring(i);
+                                System.out.println(json);
+                                break;
+                            }
 
+                        }
+                        String arr[]=json.split("\"");
+                        String ruolo=arr[3];
+                        System.out.println(ruolo);
+                        correctLogin = true;
+                        Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
+                        if (ruolo.equals("Studente")) {
+                            isStudente = true;
+                        } else if (ruolo.equals("Docente")) {
+                            isStudente = false;
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                        correctLogin = false;
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
+                params.put("password", password);
+                return params;
+            }
+        };
+        MySingleton.getInstance(this).addToRequestQueue(postRequest);
     }
 
     public void Docente(){
