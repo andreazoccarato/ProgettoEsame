@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use Laravel\Passport\Client;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 include '..\app\Http\Controllers\Api\Auth\Database.php';
 
@@ -35,9 +36,11 @@ class LoginController extends Controller {
     }
 
     private function risposta($ruolo) {
-        echo response()->json([
-                    'Ruolo' => '' . $ruolo . '']);
-        $this->database->disconnect();
+        $risposta = Array("Ruolo" => $ruolo);
+        echo json_encode($risposta);
+//        echo response()->json([
+//            'Ruolo' => '' . $ruolo . '']);
+//        $this->database->disconnect();
         return response()->json([
                     'Ruolo' => '' . $ruolo . ''
         ]);

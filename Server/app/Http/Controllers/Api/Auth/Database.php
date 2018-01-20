@@ -70,13 +70,10 @@ class Database {
     }
 
     function login($username, $password) {
-        echo ' ' . $username . ' ';
-        echo ' ' . $password . ' ';
         $qryLogin = "SELECT Studente.CodiceFiscale FROM Credenziali INNER JOIN Studente ON Credenziali.ID=Studente.IdCredenziali WHERE Username='" . $username . "' AND Password='" . $password . "'";
         $result = $this->conn->query($qryLogin);
         
         $CF = $result->fetchColumn(0);
-        echo ' ' . $CF . ' ';
         if ($this->existDocByCF($CF)) {
             return "Docente";
         } else if ($this->existStudByCF($CF)) {

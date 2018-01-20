@@ -7,23 +7,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean isStudente;
-    private boolean correctLogin;
     private static final int STUDENTE = 1;
     private static final int DOCENTE = 2;
 
@@ -31,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.isStudente = false;
-        correctLogin=false;
     }
 
     public void login(View view) {
@@ -47,17 +40,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         loginToServer(username,password);
-        if (correctLogin) {
-
-            if (isStudente == true) {
-                Studente();
-            } else {
-                Docente();
-            }
-
-        } else {
-            Toast.makeText(this, "Username o/e password non corretti", Toast.LENGTH_SHORT).show();
-        }
     }
 
     /*
@@ -65,8 +47,16 @@ public class MainActivity extends AppCompatActivity {
         //this is the url where you want to send the request
         String url = "http://192.168.1.104:8000/api/login";
 
+        JSONObject json=new JSONObject();
+        try {
+            json.put("username",username);
+            json.put("password",password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,
-                url, null,
+                url, json,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -74,10 +64,9 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("------------RISPOSTA------------");
                         System.out.println("-----------------------------------------------------------------"+response.toString());
                         try {
-                            JSONArray arr=response.getJSONArray("Ruolo");
-                            String app = arr.getString(0);
+                            String ruolo = response.getString("Ruolo");
                             correctLogin = true;
-                            Toast.makeText(MainActivity.this, app, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, ruolo, Toast.LENGTH_SHORT).show();
                             if (response.equals("Studente")) {
                                 isStudente = true;
                             } else if (response.equals("Docente")) {
@@ -95,22 +84,14 @@ public class MainActivity extends AppCompatActivity {
                         error.printStackTrace();
                         correctLogin = false;
                     }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("username", username);
-                params.put("password", password);
-
-                return params;
-            }
-        };
+                });
 
         // Adding the request to the queue along with a unique string tag
         jsObjRequest.setTag("postRequest");
         MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
     }
     */
+
 
     private void loginToServer(final String username, final String password) {
         String url = "http://192.168.1.104:8000/api/login";
@@ -121,32 +102,31 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         System.out.println("------------RISPOSTA------------");
                         System.out.println("----------------------------------------"+response);
-                        String json="";
-                        for (int i=response.length()-1;i>0;i--){
-                            if(response.charAt(i)=='{'){
-                                json=response.substring(i);
-                                System.out.println(json);
-                                break;
-                            }
-
+                        JSONObject json= null;
+                        String ruolo="";
+                        try {
+                            json = new JSONObject(response);
+                            ruolo=json.getString("Ruolo");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        String arr[]=json.split("\"");
-                        String ruolo=arr[3];
+
                         System.out.println(ruolo);
-                        correctLogin = true;
-                        Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, ruolo, Toast.LENGTH_SHORT).show();
                         if (ruolo.equals("Studente")) {
-                            isStudente = true;
+                            Studente();
                         } else if (ruolo.equals("Docente")) {
-                            isStudente = false;
+                            Docente();
+                        }else{
+                            Toast.makeText(MainActivity.this, "Username o/e password non corretti", Toast.LENGTH_SHORT).show();
                         }
                     }
+
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         error.printStackTrace();
-                        correctLogin = false;
                     }
                 }
         ) {
@@ -160,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         };
         MySingleton.getInstance(this).addToRequestQueue(postRequest);
     }
+
 
     public void Docente(){
         Intent i=new Intent(MainActivity.this,DocenteActivity.class);

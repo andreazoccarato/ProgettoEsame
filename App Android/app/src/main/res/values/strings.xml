@@ -1,7 +1,15 @@
 <resources>
-    <string name="app_name">Login</string>
+    <string name="app_name">Registro</string>
     <string name="Username">Username</string>
     <string name="Password">Password</string>
     <string name="ButtonLogin">LOGIN</string>
     <string name="Register">REGISTER</string>
+    <string name="Voti">VOTI</string>
+    <string name="Scan">QRCode</string>
+    <string name="LogOut">LogOut</string>
+    <string name="Assenze">Assenze</string>
+    <string name="ModificaProfilo">Modifica Profilo</string>
+    <string name="TitleDocente">Docente</string>
+    <string name="TitleStudente">Studente</string>
+    <string name="TitleLogin">Login</string>
 </resources>
