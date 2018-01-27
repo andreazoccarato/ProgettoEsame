@@ -4,8 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,28 +21,32 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/Voti"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:onClick="voti"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/Scan"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:onClick="qrCode"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
-        android:text="@string/Assenze"/>
+        android:text="@string/Assenze"
+        android:onClick="assenze"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
-        android:text="@string/ModificaProfilo"/>
+        android:text="@string/ModificaProfilo"
+        android:onClick="modificaProfilo"/>
 
     <Button
         android:id="@+id/button"
@@ -51,7 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
-        android:text="@string/LogOut" />
+        android:text="@string/LogOut"
+        android:onClick="logOut"/>
 
 
 </LinearLayout>

@@ -26,6 +26,7 @@ class LoginController extends Controller {
         $password = $request->input('password');
 
         $app = $this->database->login($username, $password);
+        $this->database->disconnect();
         if ($app === 'Docente') {
             $this->risposta('Docente');
         } else if ($app === 'Studente') {
@@ -38,9 +39,6 @@ class LoginController extends Controller {
     private function risposta($ruolo) {
         $risposta = Array("Ruolo" => $ruolo);
         echo json_encode($risposta);
-//        echo response()->json([
-//            'Ruolo' => '' . $ruolo . '']);
-//        $this->database->disconnect();
         return response()->json([
                     'Ruolo' => '' . $ruolo . ''
         ]);

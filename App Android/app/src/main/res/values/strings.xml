@@ -12,4 +12,17 @@
     <string name="TitleDocente">Docente</string>
     <string name="TitleStudente">Studente</string>
     <string name="TitleLogin">Login</string>
+    <string name="getQrCode">get qr code</string>
+    <string name="title_activity_docente">DocenteActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="welcome">Welcome</string>
+    <string name="welcome_subtitles">Choose an options</string>
+
+    <string name="getQrCode_Title">Press button to retrieve QrCode</string>
+
+
 </resources>

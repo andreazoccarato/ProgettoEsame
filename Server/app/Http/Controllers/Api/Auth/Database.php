@@ -29,7 +29,7 @@ class Database {
         $qry = "SELECT count(*) FROM Studente WHERE Nome='" . $nome . "' AND Cognome='" . $cognome . "'";
         $result = $this->conn->query($qry);
         $count = $result->fetchColumn(0);
-        if ($count!=0) {
+        if ($count != 0) {
             return true;
         } else {
             return false;
@@ -40,7 +40,7 @@ class Database {
         $qry = "SELECT count(*) FROM Studente WHERE CodiceFiscale='" . $CodiceFiscale . "'";
         $result = $this->conn->query($qry);
         $count = $result->fetchColumn(0);
-        if ($count!=0) {
+        if ($count != 0) {
             return true;
         } else {
             return false;
@@ -51,7 +51,7 @@ class Database {
         $qry = "SELECT count(*) FROM Docente WHERE Nome='" . $nome . "' AND Cognome='" . $cognome . "'";
         $result = $this->conn->query($qry);
         $count = $result->fetchColumn(0);
-        if ($count!=0) {
+        if ($count != 0) {
             return true;
         } else {
             return false;
@@ -62,25 +62,49 @@ class Database {
         $qry = "SELECT count(*) FROM Docente WHERE CodiceFiscale='" . $CodiceFiscale . "'";
         $result = $this->conn->query($qry);
         $count = $result->fetchColumn(0);
-        if ($count!=0) {
+        if ($count != 0) {
             return true;
         } else {
             return false;
         }
     }
 
+    function getIdDocente($username, $password) {
+        $qry = "SELECT Docente.CodiceFiscale "
+                . "FROM Docente INNER JOIN Credenziali ON Docente.IdCredenziali=Credenziali.ID "
+                . "WHERE Username='" . $username . "' AND Password='" . $password . "'";
+        $result = $this->conn->query($qry);
+        return $result->fetchColumn(0);
+    }
+
+    function getClasse($username, $password) {
+        //TO DO
+        //$result=$this->conn->query($qry);
+        // $result->fetchColumn(0);
+        return 'Classe';
+    }
+
+    function getScuola($username, $password) {
+        //TO DO
+        //$result=$this->conn->query($qry);
+        //return $result->fetchColumn(0);
+        return 'Scuola';
+    }
+
     function login($username, $password) {
-        $qryLogin = "SELECT Studente.CodiceFiscale FROM Credenziali INNER JOIN Studente ON Credenziali.ID=Studente.IdCredenziali WHERE Username='" . $username . "' AND Password='" . $password . "'";
-        $result = $this->conn->query($qryLogin);
-        
-        $CF = $result->fetchColumn(0);
-        if ($this->existDocByCF($CF)) {
-            return "Docente";
-        } else if ($this->existStudByCF($CF)) {
+        $qryStud = "SELECT Studente.CodiceFiscale FROM Credenziali INNER JOIN Studente ON Credenziali.ID=Studente.IdCredenziali WHERE Username='" . $username . "' AND Password='" . $password . "'";
+        $resultStud = $this->conn->query($qryStud);
+        $CFStud = $resultStud->fetchColumn(0);
+        if ($CFStud!="") {
             return "Studente";
-        } else {
-            return "Username e/o Password errati";
         }
+        $qryDoc = "SELECT Docente.CodiceFiscale FROM Credenziali INNER JOIN Docente ON Credenziali.ID=Docente.IdCredenziali WHERE Username='" . $username . "' AND Password='" . $password . "'";
+        $resultDoc = $this->conn->query($qryDoc);
+        $CFDoc = $resultDoc->fetchColumn(0);
+        if ($CFDoc!="") {
+            return "Docente";
+        }
+        return "Username e/o Password errati";
     }
 
     function insertStud($CodiceFiscale, $Nome, $Cognome, $DataNascita, $Sezione, $IdCredenziali) {

@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,57 +43,6 @@ public class MainActivity extends AppCompatActivity {
         loginToServer(username,password);
     }
 
-    /*
-    private void loginToServer(final String username, final String password) {
-        //this is the url where you want to send the request
-        String url = "http://192.168.1.104:8000/api/login";
-
-        JSONObject json=new JSONObject();
-        try {
-            json.put("username",username);
-            json.put("password",password);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST,
-                url, json,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        System.out.println("------------RISPOSTA------------");
-                        System.out.println("-----------------------------------------------------------------"+response.toString());
-                        try {
-                            String ruolo = response.getString("Ruolo");
-                            correctLogin = true;
-                            Toast.makeText(MainActivity.this, ruolo, Toast.LENGTH_SHORT).show();
-                            if (response.equals("Studente")) {
-                                isStudente = true;
-                            } else if (response.equals("Docente")) {
-                                isStudente = false;
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        correctLogin = false;
-                    }
-                });
-
-        // Adding the request to the queue along with a unique string tag
-        jsObjRequest.setTag("postRequest");
-        MySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
-    }
-    */
-
-
     private void loginToServer(final String username, final String password) {
         String url = "http://192.168.1.104:8000/api/login";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
@@ -114,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println(ruolo);
                         Toast.makeText(MainActivity.this, ruolo, Toast.LENGTH_SHORT).show();
                         if (ruolo.equals("Studente")) {
-                            Studente();
+                            Studente(username,password);
                         } else if (ruolo.equals("Docente")) {
-                            Docente();
+                            Docente(username,password);
                         }else{
                             Toast.makeText(MainActivity.this, "Username o/e password non corretti", Toast.LENGTH_SHORT).show();
                         }
@@ -142,24 +92,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void Docente(){
+    public void Docente(String username,String password){
         Intent i=new Intent(MainActivity.this,DocenteActivity.class);
+        Bundle bundle=new Bundle();
+        bundle.putString("username",username);
+        bundle.putString("password",password);
+        i.putExtras(bundle);
         startActivityForResult(i,DOCENTE);
     }
 
-    public void Studente(){
+    public void Studente(String username,String password){
         Intent i=new Intent(MainActivity.this,StudenteActivity.class);
+        Bundle bundle=new Bundle();
+        bundle.putString("username",username);
+        bundle.putString("password",password);
+        i.putExtras(bundle);
         startActivityForResult(i,STUDENTE);
     }
+
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == STUDENTE) {
             if (resultCode == RESULT_OK) {
-                Toast.makeText(this, data.getStringExtra("isOK"), Toast.LENGTH_SHORT).show();
+                System.out.println("From Studente");
             }
         }else if(requestCode == DOCENTE){
             if (resultCode == RESULT_OK) {
-                Toast.makeText(this, data.getStringExtra("isOK"), Toast.LENGTH_SHORT).show();
+                System.out.println("From Docente");
             }
         }
     }
