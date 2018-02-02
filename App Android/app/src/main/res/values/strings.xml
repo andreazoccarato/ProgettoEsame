@@ -22,7 +22,9 @@
     <string name="welcome">Welcome</string>
     <string name="welcome_subtitles">Choose an options</string>
 
-    <string name="getQrCode_Title">Press button to retrieve QrCode</string>
+    <string name="getQrCode_Title">Press button to \n retrieve QrCode</string>
+    <string name="title_activity_studente">StudenteActivity</string>
+    <string name="agenda">Agenda</string>
 
 
 </resources>

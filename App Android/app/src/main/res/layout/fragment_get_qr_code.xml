@@ -1,23 +1,40 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.andrea.progettoesame.GetQrCodeFragment">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/getQrCode_Title"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
-        android:textSize="25dp"/>
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.example.andrea.progettoesame.GetQrCodeFragment">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/getQrCode"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="150dp"
-        android:onClick="retrieve"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/getQrCode_Title"
+            android:layout_gravity="center"
+            android:textSize="25dp"
+            android:id="@+id/textView"
+            android:layout_marginTop="25dp"/>
 
-</FrameLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/getQrCode"
+            android:layout_gravity="center"
+            android:id="@+id/getQrcode"
+            android:layout_marginTop="25dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/qrCodeImage"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,10 +1,12 @@
 package com.example.andrea.progettoesame;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,6 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 public class DocenteActivity extends AppCompatActivity implements
@@ -21,6 +26,8 @@ NavigationView.OnNavigationItemSelectedListener {
 
     public String username;
     public String password;
+
+    public TextView textView;
 
     public static final int QRCODE=0;
 
@@ -47,12 +54,15 @@ NavigationView.OnNavigationItemSelectedListener {
         System.out.println(username);
         System.out.println(password);
 
-       /** TextView textView= (TextView) findViewById(R.id.header_name);
-        textView.setText(username);*/
+        /**
+        textView= (TextView) findViewById(R.id.header_name);
+        textView.setText(username);
+*/
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame, new MainFragment());
         ft.commit();
+
     }
 
     @Override
@@ -112,5 +122,10 @@ NavigationView.OnNavigationItemSelectedListener {
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public Pair<String,String> getData(){
+        Pair p=new Pair(username,password);
+        return p;
     }
 }

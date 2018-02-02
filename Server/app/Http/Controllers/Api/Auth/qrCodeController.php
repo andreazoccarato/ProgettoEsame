@@ -32,13 +32,14 @@ class qrCodeController extends Controller {
         $time = date("H", time());
         $random = rand(1000, 10000);
 
-        $risp = $idDoc . "-" . $scuola . "-" . $classe . "-" . $time . "-" . $random;
+        $strQrCode = $idDoc . "-" . $scuola . "-" . $classe . "-" . $time . "-" . $random;
 
         $this->database->disconnect();
 
-        QRcode::png($risp, "test.png", "L", 5, 5);
+        QRcode::png($strQrCode, "test.png", "L", 5, 5);
         
-        return response()->download("../public/test.png");
+        $risposta = Array("qrCodeRequest" => $strQrCode);
+        echo json_encode($risposta);
     }
 
     public function setPresenza(Request $request) {

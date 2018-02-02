@@ -37,12 +37,13 @@
 
         <!-- Studente Activity -->
         <activity
-            android:name=".StudenteActivity"
-            android:label="@string/TitleStudente" />
-        <activity
             android:name=".DocenteActivity"
             android:label="@string/title_activity_docente"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".StudenteActivity"
+            android:label="@string/title_activity_studente"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
