@@ -1,1 +1,1 @@
-include ':app', ':httpclient-4.5.4', ':httpclient-win-4.5.4', ':jna-4.4.0', ':httpclient-cache-4.5.4', ':httpcore-4.4.7', ':httpmime-4.5.4', ':volley', ':zxing'
+include ':app', ':volley', ':zxing'

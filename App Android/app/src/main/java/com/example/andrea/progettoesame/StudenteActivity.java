@@ -4,7 +4,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.Pair;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,7 +19,8 @@ import android.view.MenuItem;
 
 public class StudenteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        MainFragment.OnFragmentInteractionListener{
+        MainFragment.OnFragmentInteractionListener,
+        ScanQrCodeFragment.OnFragmentInteractionListener{
 
     public String username;
     public String password;
@@ -87,8 +90,9 @@ public class StudenteActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        Fragment fragment = null;
         if (id == R.id.nav_Scan) {
-            // Handle the camera action
+            fragment=new ScanQrCodeFragment();
         } else if (id == R.id.nav_Voti) {
 
         } else if (id == R.id.nav_assenze) {
@@ -99,33 +103,22 @@ public class StudenteActivity extends AppCompatActivity
 
         }
 
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame, fragment);
+            ft.commit();
+        }
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-
-
-        public void voti(View view){
-
-        }
-
-        public void qrCode(View view){
-
-        }
-
-        public void modificaProfilo(View view){
-
-        }
-
-        public void assenze(View view){
-
-        }
-
-        public void logOut(View view){
-
-        }
-
+    public Pair<String,String> getData(){
+        Pair p=new Pair(username,password);
+        return p;
+    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
