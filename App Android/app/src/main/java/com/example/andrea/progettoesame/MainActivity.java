@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle=new Bundle();
         bundle.putString("username",username);
         bundle.putString("password",password);
+        bundle.putString("scanResult","");
         i.putExtras(bundle);
         startActivityForResult(i,STUDENTE);
     }

@@ -11,8 +11,9 @@ class StudenteSeeder extends Seeder {
             'Nome' => 'Andrea',
             'Cognome' => 'Zoccarato',
             'DataNascita' => '22/11/1999',
-            'Sezione' => '5ID',
-            'IdCredenziali' => '1'
+            'IdClasse' => '1',
+            'IdCredenziali' => '1',
+            'CodiceScuola' => 123
         ));
     }
 

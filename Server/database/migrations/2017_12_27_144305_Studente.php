@@ -18,10 +18,12 @@ class Studente extends Migration
             $table->text('Nome');
             $table->text('Cognome');
             $table->date('DataNascita');
-            $table->text('Sezione');
+            $table->text('IdClasse');
             $table->integer('IdCredenziali');
-            $table->foreign('Sezione')->references('Sezione')->on('Classe');
+            $table->integer('CodiceScuola');
+            $table->foreign('IdClasse')->references('IdClasse')->on('Classe');
             $table->foreign('IdCredenziali')->references('ID')->on('Credenziali');
+            $table->foreign('CodiceScuola')->references('CodiceScuola')->on('Scuola');
             $table->unique(array('Nome','Cognome'));  
         });
     }

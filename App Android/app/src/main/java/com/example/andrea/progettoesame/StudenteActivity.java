@@ -16,6 +16,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class StudenteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -24,6 +36,7 @@ public class StudenteActivity extends AppCompatActivity
 
     public String username;
     public String password;
+    public String scanResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +58,12 @@ public class StudenteActivity extends AppCompatActivity
         Bundle bundle=getIntent().getExtras();
         this.username=bundle.getString("username");
         this.password=bundle.getString("password");
+        this.scanResult=bundle.getString("scanResult");
+
+        if(!scanResult.equals("")){
+            Toast.makeText(StudenteActivity.this,scanResult,Toast.LENGTH_LONG).show();
+            setPresenza();
+        }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame, new MainFragment());
@@ -123,5 +142,44 @@ public class StudenteActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public void setPresenza(){
+        String url="http://192.168.1.104:8000/api/setPresenza";
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        System.out.println("------------RISPOSTA------------");
+                        System.out.println("----------------------------------------"+response);
+                        JSONObject json= null;
+                        String risultato="";
+                        try {
+                            json = new JSONObject(response);
+                            risultato=json.getString("Risultato");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Toast.makeText(StudenteActivity.this,risultato,Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("username", username);
+                params.put("password", password);
+                params.put("scanResult",scanResult);
+                return params;
+            }
+        };
+        MySingleton.getInstance(this).addToRequestQueue(postRequest);
     }
 }

@@ -11,7 +11,9 @@ class DocenteSeeder extends Seeder {
             'Nome' => 'Carlo',
             'Cognome' => 'Salvagno',
             'DataNascita' => '20/11/1960',
+            'CodiceScuola' => 123,
             'IdCredenziali' => '2'
+            
         ));
     }
 

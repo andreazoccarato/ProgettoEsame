@@ -127,20 +127,12 @@ public class ScanQrCodeFragment extends Fragment implements ZXingScannerView.Res
 
     @Override
     public void handleResult(Result rawResult) {
-        // Do something with the result here
-        Log.v("TAG", rawResult.getText()); // Prints scan results
-        // Prints the scan format (qrcode, pdf417 etc.)
-        Log.v("TAG", rawResult.getBarcodeFormat().toString());
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Scan Result");
-        builder.setMessage(rawResult.getText());
-        AlertDialog alert1 = builder.create();
-        alert1.show();
-
+        System.out.println(rawResult.getText());
         Intent i=new Intent(getContext(),StudenteActivity.class);
         Bundle bundle=new Bundle();
         bundle.putString("username",username);
         bundle.putString("password",password);
+        bundle.putString("scanResult",rawResult.getText());
         i.putExtras(bundle);
         startActivity(i);
     }

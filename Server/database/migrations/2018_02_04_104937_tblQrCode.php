@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class TbrDocenteClasse extends Migration
+class TblQrCode extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class TbrDocenteClasse extends Migration
      */
     public function up()
     {
-        Schema::create('tbrDocenteClasse', function($table) {
-            $table->increments('ID');
-            $table->text('IdClasse');
-            $table->integer('CodiceFiscale');
+        Schema::create('tblQrCode',function($table){
+            $table->increments('IdQrCode');
+            $table->date('Giorno');
+            $table->integer('CodiceControllo');
+            $table->integer('IdScuola');
+            $table->integer('IdClasse');
+            $table->text('CodiceFiscale');
+            $table->foreign('IdScuola')->references('IdScuola')->on('Scuola');
             $table->foreign('IdClasse')->references('IdClasse')->on('Classe');
             $table->foreign('CodiceFiscale')->references('CodiceFiscale')->on('Docente');
         });
@@ -29,6 +33,6 @@ class TbrDocenteClasse extends Migration
      */
     public function down()
     {
-        Schema::drop('tbrDocenteClasse');
+        Schema::drop('tblQrCode');
     }
 }

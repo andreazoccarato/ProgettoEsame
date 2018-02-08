@@ -78,73 +78,99 @@ class Database {
     }
 
     function getClasse($username, $password) {
-        //TO DO
-        //$result=$this->conn->query($qry);
-        // $result->fetchColumn(0);
-        return 'Classe';
+        $qryStudente = "SELECT Studente.IdClasse "
+                . "FROM Studente INNER JOIN Credenziali ON Studente.IdCredenziali=Credenziali.ID "
+                . "WHERE Username='" . $username . "' AND Password='" . $password . "'";
+        $resultStudente = $this->conn->query($qryStudente);
+        $result=$resultStudente->fetchColumn(0);
+        if ($result != "") {
+            return $result;
+        }
+
+        $qryDocente = "SELECT tbrDocenteClasse.IdClasse "
+                . "FROM Docente INNER JOIN Credenziali ON Docente.IdCredenziali=Credenziali.ID INNER JOIN tbrDocenteClasse ON Docente.CodiceFiscale=tbrDocenteClasse.CodiceFiscale "
+                . "WHERE Username='" . $username . "' AND Password='" . $password . "'";
+        $resultDocente = $this->conn->query($qryDocente);
+        $resultD=$resultDocente->fetchColumn(0);
+        if ($resultD != "") {
+            return $resultD;
+        }
     }
 
     function getScuola($username, $password) {
-        //TO DO
-        //$result=$this->conn->query($qry);
-        //return $result->fetchColumn(0);
-        return 'Scuola';
+        $qryStudente = "SELECT Studente.CodiceScuola "
+                . "FROM Studente INNER JOIN Credenziali ON Studente.IdCredenziali=Credenziali.ID "
+                . "WHERE Username='" . $username . "' AND Password='" . $password . "'";
+        $resultStudente = $this->conn->query($qryStudente);
+        $result=$resultStudente->fetchColumn(0);
+        if ($result != "") {
+            return $result;
+        }
+
+        $qryDocente = "SELECT Docente.CodiceScuola "
+                . "FROM Docente INNER JOIN Credenziali ON Docente.IdCredenziali=Credenziali.ID "
+                . "WHERE Username='" . $username . "' AND Password='" . $password . "'";
+        $resultDocente = $this->conn->query($qryDocente);
+        $resultD=$resultDocente->fetchColumn(0);
+        if ($resultD != "") {
+            return $resultD;
+        }
     }
 
     function login($username, $password) {
         $qryStud = "SELECT Studente.CodiceFiscale FROM Credenziali INNER JOIN Studente ON Credenziali.ID=Studente.IdCredenziali WHERE Username='" . $username . "' AND Password='" . $password . "'";
         $resultStud = $this->conn->query($qryStud);
         $CFStud = $resultStud->fetchColumn(0);
-        if ($CFStud!="") {
+        if ($CFStud != "") {
             return "Studente";
         }
         $qryDoc = "SELECT Docente.CodiceFiscale FROM Credenziali INNER JOIN Docente ON Credenziali.ID=Docente.IdCredenziali WHERE Username='" . $username . "' AND Password='" . $password . "'";
         $resultDoc = $this->conn->query($qryDoc);
         $CFDoc = $resultDoc->fetchColumn(0);
-        if ($CFDoc!="") {
+        if ($CFDoc != "") {
             return "Docente";
         }
         return "Username e/o Password errati";
     }
 
     function insertStud($CodiceFiscale, $Nome, $Cognome, $DataNascita, $Sezione, $IdCredenziali) {
-        $this->preparedStatement->prepare("INSERT INTO Studente VALUES('" . $CodiceFiscale . "' "
-                . "'" . $Nome . "' "
-                . "'" . $Cognome . "' "
-                . "'" . $DataNascita . "' "
-                . "'" . $Sezione . "' "
+        $this->preparedStatement = $this->conn->prepare("INSERT INTO Studente VALUES('" . $CodiceFiscale . "',"
+                . "'" . $Nome . "',"
+                . "'" . $Cognome . "',"
+                . "'" . $DataNascita . "',"
+                . "'" . $Sezione . "',"
                 . "'" . $IdCredenziali . "')");
         $this->preparedStatement->execute();
     }
 
     function insertDoc($CodiceFiscale, $Nome, $Cognome, $DataNascita, $IdCredenziali) {
-        $this->preparedStatement->prepare("INSERT INTO Docente VALUES('" . $CodiceFiscale . "' "
-                . "'" . $Nome . "' "
-                . "'" . $Cognome . "' "
-                . "'" . $DataNascita . "' "
+        $this->preparedStatement = $this->conn->prepare("INSERT INTO Docente VALUES('" . $CodiceFiscale . "',"
+                . "'" . $Nome . "',"
+                . "'" . $Cognome . "',"
+                . "'" . $DataNascita . "',"
                 . "'" . $IdCredenziali . "')");
         $this->preparedStatement->execute();
     }
 
     function insertScuola($CodiceScuola, $Nome, $Indirizzo, $Città) {
-        $this->preparedStatement->prepare("INSERT INTO Scuola VALUES('" . $CodiceScuola . "' "
-                . "'" . $Nome . "' "
-                . "'" . $Indirizzo . "' "
+        $this->preparedStatement = $this->conn->prepare("INSERT INTO Scuola VALUES('" . $CodiceScuola . "',"
+                . "'" . $Nome . "',"
+                . "'" . $Indirizzo . "',"
                 . "'" . $Città . "')");
-        $this->preparedStatement->execute();
+        $this->preparedStatement = $this->conn->execute();
     }
 
     function insertClasse($Sezione, $Indirizzo, $CodiceScuola) {
-        $this->preparedStatement->prepare("INSERT INTO Scuola VALUES('" . $Sezione . "' "
-                . "'" . $Indirizzo . "' "
+        $this->preparedStatement = $this->conn->prepare("INSERT INTO Scuola VALUES('" . $Sezione . "',"
+                . "'" . $Indirizzo . "',"
                 . "'" . $CodiceScuola . "')");
         $this->preparedStatement->execute();
     }
 
     function insertLezione($ID, $Data, $Ora, $Materia, $Descrizione, $CFDocente) {
-        $this->preparedStatement->prepare("INSERT INTO Studente VALUES('" . $ID . "' "
-                . "'" . $Data . "' "
-                . "'" . $Ora . "' "
+        $this->preparedStatement = $this->conn->prepare("INSERT INTO Studente VALUES('" . $ID . "',"
+                . "'" . $Data . "',"
+                . "'" . $Ora . "',"
                 . "'" . $Materia . "' "
                 . "'" . $Descrizione . "' "
                 . "'" . $CFDocente . "')");
@@ -152,19 +178,29 @@ class Database {
     }
 
     function insertValutazione($ID, $Voto, $Data, $Ora, $CFStudente, $CFDocente) {
-        $this->preparedStatement->prepare("INSERT INTO Studente VALUES('" . $ID . "' "
-                . "'" . $Voto . "' "
-                . "'" . $Data . "' "
-                . "'" . $Ora . "' "
-                . "'" . $CFStudente . "' "
+        $this->preparedStatement = $this->conn->prepare("INSERT INTO Studente VALUES('" . $ID . "',"
+                . "'" . $Voto . "',"
+                . "'" . $Data . "',"
+                . "'" . $Ora . "',"
+                . "'" . $CFStudente . "',"
                 . "'" . $CFDocente . "')");
         $this->preparedStatement->execute();
     }
 
     function insertGiustifica($IdGiustifica, $Data, $IdAssenza, $CFDocente) {
-        $this->preparedStatement->prepare("INSERT INTO Studente VALUES('" . $IdGiustifica . "' "
-                . "'" . $Data . "' "
-                . "'" . $IdAssenza . "'"
+        $this->preparedStatement = $this->conn->prepare("INSERT INTO Studente VALUES('" . $IdGiustifica . "' "
+                . "'" . $Data . "',"
+                . "'" . $IdAssenza . "',"
+                . "'" . $CFDocente . "')");
+        $this->preparedStatement->execute();
+    }
+
+    function insertQrCode($Data, $codiceControllo, $idScuola, $idClasse, $CFDocente) {
+        $this->preparedStatement = $this->conn->prepare("INSERT INTO tblQrCode(Giorno,CodiceControllo,IdScuola,IdClasse,CodiceFiscale) VALUES("
+                . "'" . $Data . "',"
+                . "'" . $codiceControllo . "',"
+                . "'" . $idScuola . "',"
+                . "'" . $idClasse . "',"
                 . "'" . $CFDocente . "')");
         $this->preparedStatement->execute();
     }

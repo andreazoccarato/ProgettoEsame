@@ -18,6 +18,7 @@ class Valutazione extends Migration
             $table->text('Voto');
             $table->date('Data');
             $table->integer('Ora');
+            $table->text('Materia');
             $table->text('CFStudente');
             $table->text('CFDocente');
             $table->foreign('CFStudente')->references('CodiceFiscale')->on('Studente');

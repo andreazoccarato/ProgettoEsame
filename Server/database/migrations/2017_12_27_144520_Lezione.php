@@ -20,7 +20,9 @@ class Lezione extends Migration
             $table->text('Materia');
             $table->text('Descrizione');
             $table->text('CFDocente');
+            $table->integer('IdClasse');
             $table->foreign('CFDocente')->references('CodiceFiscale')->on('Docente');
+            $table->foreign('IdClasse')->references('IdClasse')->on('Classe');
         });
     }
 

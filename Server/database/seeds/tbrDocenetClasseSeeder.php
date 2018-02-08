@@ -7,7 +7,7 @@ class tbrDocenteClasseSeeder extends Seeder {
     public function run() {
         DB::table('tbrDocenteClasse')->delete();
         DB::table('tbrDocenteClasse')->insert(array(
-            'Sezione' => '5ID',
+            'IdClasse' => 1,
             'CodiceFiscale' => 'CRLSVG60S20L736G',
         ));
     }

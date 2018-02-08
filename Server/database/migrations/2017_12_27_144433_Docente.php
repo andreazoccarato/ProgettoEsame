@@ -19,7 +19,9 @@ class Docente extends Migration
             $table->text('Cognome');
             $table->date('DataNascita');
             $table->integer('IdCredenziali');
+            $table->integer('CodiceScuola');
             $table->foreign('IdCredenziali')->references('ID')->on('Credenziali');
+            $table->foreign('CodiceScuola')->references('CodiceScuola')->on('Scuola');
             $table->unique(array('Nome','Cognome'));  
         });
     }

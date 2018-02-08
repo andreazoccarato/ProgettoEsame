@@ -11,7 +11,8 @@ class LezioneSeeder extends Seeder {
             'Ora' => '5',
             'Materia' => 'Informatica',
             'Descrizione' => 'Database e query',
-            'CFDocente' => 'CRLSVG60S20L736G'
+            'CFDocente' => 'CRLSVG60S20L736G',
+            'IdClasse' => 1
         ));
     }
 

@@ -10,6 +10,7 @@ class ValutazioneSeeder extends Seeder {
             'Voto' => '10',
             'Data' => '21/12/2017',
             'Ora' => '5',
+            'Materia' => 'Informatica',
             'CFStudente' => 'ZCCNDR99S22F241A',
             'CfDocente' => 'CRLSVG60S20L736G'
         ));

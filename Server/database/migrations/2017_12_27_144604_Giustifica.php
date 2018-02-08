@@ -16,6 +16,8 @@ class Giustifica extends Migration
         Schema::create('Giustifica', function($table) {
             $table->increments('IdGiustifica');
             $table->date('Data');
+            $table->text('Descrizione');
+            $table->text('TipologiaGiustifica');
             $table->integer('IdAssenza');
             $table->text('CFDocente');
             $table->foreign('CFDocente')->references('CodiceFiscale')->on('Docente');

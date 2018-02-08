@@ -14,7 +14,8 @@ class Classe extends Migration
     public function up()
     {
         Schema::create('Classe', function($table) {
-            $table->text('Sezione')->primary();
+            $table->increments('IdClasse');
+            $table->text('Sezione');
             $table->text('Indirizzo');
             $table->integer('CodiceScuola')->unique();
             $table->foreign('CodiceScuola')->references('CodiceScuola')->on('Scuola');
