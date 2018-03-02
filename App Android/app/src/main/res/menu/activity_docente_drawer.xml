@@ -6,5 +6,13 @@
             android:id="@+id/nav_qrCode"
             android:icon="@drawable/qrcode"
             android:title="qrcode" />
+        <item
+            android:id="@+id/nav_classi"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/Mie_classi" />
+        <item
+            android:id="@+id/nav_profilo"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="@string/ModificaProfilo" />
     </group>
 </menu>

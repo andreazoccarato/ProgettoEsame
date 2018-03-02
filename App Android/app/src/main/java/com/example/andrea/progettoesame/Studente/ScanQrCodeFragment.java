@@ -1,4 +1,4 @@
-package com.example.andrea.progettoesame;
+package com.example.andrea.progettoesame.Studente;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.example.andrea.progettoesame.R;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;

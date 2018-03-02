@@ -1,4 +1,4 @@
-package com.example.andrea.progettoesame;
+package com.example.andrea.progettoesame.Docente;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.andrea.progettoesame.Docente.GetQrCodeFragment;
+import com.example.andrea.progettoesame.MainFragment;
+import com.example.andrea.progettoesame.R;
 
 
 public class DocenteActivity extends AppCompatActivity implements
@@ -105,6 +109,10 @@ NavigationView.OnNavigationItemSelectedListener {
         Fragment fragment = null;
         if (id == R.id.nav_qrCode) {
             fragment=new GetQrCodeFragment();
+        }else if(id==R.id.nav_classi){
+
+        }else if(id==R.id.nav_profilo){
+
         }
 
         if (fragment != null) {

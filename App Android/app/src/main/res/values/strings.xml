@@ -4,7 +4,7 @@
     <string name="Password">Password</string>
     <string name="ButtonLogin">LOGIN</string>
     <string name="Register">REGISTER</string>
-    <string name="Voti">VOTI</string>
+    <string name="Voti">Valutazioni</string>
     <string name="Scan">QRCode</string>
     <string name="LogOut">LogOut</string>
     <string name="Assenze">Assenze</string>
@@ -28,6 +28,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="Mie_classi">Mie Classi</string>
 
 
 </resources>

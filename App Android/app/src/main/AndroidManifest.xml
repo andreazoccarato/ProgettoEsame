@@ -38,11 +38,11 @@
 
         <!-- Studente Activity -->
         <activity
-            android:name=".DocenteActivity"
+            android:name=".Docente.DocenteActivity"
             android:label="@string/title_activity_docente"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".StudenteActivity"
+            android:name=".Studente.StudenteActivity"
             android:label="@string/title_activity_studente"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

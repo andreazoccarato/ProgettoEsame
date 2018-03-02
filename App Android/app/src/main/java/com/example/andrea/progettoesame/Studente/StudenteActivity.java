@@ -1,14 +1,11 @@
-package com.example.andrea.progettoesame;
+package com.example.andrea.progettoesame.Studente;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.Pair;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,10 +15,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.andrea.progettoesame.MainFragment;
+import com.example.andrea.progettoesame.MySingleton;
+import com.example.andrea.progettoesame.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +33,7 @@ import java.util.Map;
 public class StudenteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MainFragment.OnFragmentInteractionListener,
+        VisualizzaVotiFragment.OnFragmentInteractionListener,
         ScanQrCodeFragment.OnFragmentInteractionListener{
 
     public String username;
@@ -113,7 +115,7 @@ public class StudenteActivity extends AppCompatActivity
         if (id == R.id.nav_Scan) {
             fragment=new ScanQrCodeFragment();
         } else if (id == R.id.nav_Voti) {
-
+            fragment=new VisualizzaVotiFragment();
         } else if (id == R.id.nav_assenze) {
 
         } else if (id == R.id.nav_agenda) {
@@ -180,6 +182,8 @@ public class StudenteActivity extends AppCompatActivity
                 return params;
             }
         };
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(1000, 10, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         MySingleton.getInstance(this).addToRequestQueue(postRequest);
     }
 }

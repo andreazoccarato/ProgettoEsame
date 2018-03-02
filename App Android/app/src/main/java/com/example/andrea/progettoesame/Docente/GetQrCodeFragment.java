@@ -1,4 +1,4 @@
-package com.example.andrea.progettoesame;
+package com.example.andrea.progettoesame.Docente;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,10 +12,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.andrea.progettoesame.MySingleton;
+import com.example.andrea.progettoesame.R;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -149,6 +152,7 @@ public class GetQrCodeFragment extends Fragment {
                         return params;
                     }
                 };
+                postRequest.setRetryPolicy(new DefaultRetryPolicy(1000, 10, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 MySingleton.getInstance(getContext()).addToRequestQueue(postRequest);
             }
         });

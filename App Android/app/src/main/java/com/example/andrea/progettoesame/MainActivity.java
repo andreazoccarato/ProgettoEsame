@@ -6,15 +6,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.andrea.progettoesame.Docente.DocenteActivity;
+import com.example.andrea.progettoesame.Studente.StudenteActivity;
 
-import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,12 +89,15 @@ public class MainActivity extends AppCompatActivity {
                 return params;
             }
         };
+        //imposto un numero di tentativi in caso di com.android.volley.TimeoutError
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(1000, 10, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         MySingleton.getInstance(this).addToRequestQueue(postRequest);
     }
 
 
     public void Docente(String username,String password){
-        Intent i=new Intent(MainActivity.this,DocenteActivity.class);
+        Intent i=new Intent(MainActivity.this, DocenteActivity.class);
         Bundle bundle=new Bundle();
         bundle.putString("username",username);
         bundle.putString("password",password);
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void Studente(String username,String password){
-        Intent i=new Intent(MainActivity.this,StudenteActivity.class);
+        Intent i=new Intent(MainActivity.this, StudenteActivity.class);
         Bundle bundle=new Bundle();
         bundle.putString("username",username);
         bundle.putString("password",password);
