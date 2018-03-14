@@ -1,6 +1,7 @@
 package com.example.andrea.progettoesame;
 
 import android.content.Intent;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int STUDENTE = 1;
     private static final int DOCENTE = 2;
 
+    private String username;
+    private String password;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,18 +37,18 @@ public class MainActivity extends AppCompatActivity {
     public void login(View view) {
         EditText userName = (EditText) findViewById(R.id.username);
         EditText passWord = (EditText) findViewById(R.id.password);
-        String username = userName.getText().toString();
-        String password = passWord.getText().toString();
+        username = userName.getText().toString();
+        password = passWord.getText().toString();
 
         if (username.equals("") || password.equals("")) {
             userName.setError("Campo Necessario");
             passWord.setError("Campo Necessario");
         }
 
-        loginToServer(username,password);
+        loginToServer();
     }
 
-    private void loginToServer(final String username, final String password) {
+    private void loginToServer() {
         String url = "http://192.168.1.104:8000/api/login";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>()
@@ -65,9 +69,9 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println(ruolo);
                         Toast.makeText(MainActivity.this, ruolo, Toast.LENGTH_SHORT).show();
                         if (ruolo.equals("Studente")) {
-                            Studente(username,password);
+                            Studente();
                         } else if (ruolo.equals("Docente")) {
-                            Docente(username,password);
+                            Docente();
                         }else{
                             Toast.makeText(MainActivity.this, "Username o/e password non corretti", Toast.LENGTH_SHORT).show();
                         }
@@ -96,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void Docente(String username,String password){
+    public void Docente(){
         Intent i=new Intent(MainActivity.this, DocenteActivity.class);
         Bundle bundle=new Bundle();
         bundle.putString("username",username);
@@ -105,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(i,DOCENTE);
     }
 
-    public void Studente(String username,String password){
+    public void Studente(){
         Intent i=new Intent(MainActivity.this, StudenteActivity.class);
         Bundle bundle=new Bundle();
         bundle.putString("username",username);
@@ -126,6 +130,11 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println("From Docente");
             }
         }
+    }
+
+    public Pair<String,String> getData(){
+        Pair p=new Pair(username,password);
+        return p;
     }
 
 }

@@ -1,0 +1,39 @@
+<LinearLayout
+    xmlns:adroid="http://schemas.android.com/apk/res/android"
+    adroid:layout_height="match_parent"
+    adroid:layout_width="match_parent"
+    adroid:orientation="vertical">
+
+
+    <android.support.design.widget.AppBarLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:layout_marginTop="45dp">
+
+        <devs.mulham.horizontalcalendar.HorizontalCalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        adroid:layout_width="wrap_content"
+        adroid:layout_height="wrap_content"
+        adroid:layout_gravity="center"
+        adroid:textSize="25dp"
+        adroid:textStyle="bold"
+        adroid:layout_marginTop="10dp"
+        adroid:id="@+id/agenda_fragment_textView"/>
+
+    <ListView
+        adroid:layout_width="match_parent"
+        adroid:layout_height="wrap_content"
+        adroid:id="@+id/list">
+    </ListView>
+
+</LinearLayout>

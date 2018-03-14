@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use Laravel\Passport\Client;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 include '..\app\Http\Controllers\Api\Auth\Database.php';
 

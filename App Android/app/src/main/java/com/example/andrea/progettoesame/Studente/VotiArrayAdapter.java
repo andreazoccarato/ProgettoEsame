@@ -26,7 +26,7 @@ public class VotiArrayAdapter extends ArrayAdapter<Voto> {
     private static final String TAG = "ViewHolder";
 
     // this object will be tag
-    static class ViewHolder {
+    public static class ViewHolder {
         public TextView voto;
         public TextView materia;
         public TextView data;

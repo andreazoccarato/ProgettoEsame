@@ -14,6 +14,18 @@ class CredenzialiSeeder extends Seeder {
             'Username' => 'csal',
             'Password' => 'csal001',
         ));
+        DB::table('Credenziali')->insert(array(
+            'Username' => 'borsato',
+            'Password' => 'borsato001',
+        ));
+        DB::table('Credenziali')->insert(array(
+            'Username' => 'luppi',
+            'Password' => 'luppi001',
+        ));
+        DB::table('Credenziali')->insert(array(
+            'Username' => 'doni',
+            'Password' => 'doni001',
+        ));
     }
 
 }

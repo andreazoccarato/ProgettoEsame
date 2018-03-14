@@ -26,21 +26,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- MainActivity -->
         <activity
             android:name=".MainActivity"
             android:label="@string/TitleLogin" />
 
-        <!-- MainActivity -->
-
-
         <!-- Docente Activity -->
-
-
-        <!-- Studente Activity -->
         <activity
             android:name=".Docente.DocenteActivity"
             android:label="@string/title_activity_docente"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <!-- Studente Activity -->
         <activity
             android:name=".Studente.StudenteActivity"
             android:label="@string/title_activity_studente"

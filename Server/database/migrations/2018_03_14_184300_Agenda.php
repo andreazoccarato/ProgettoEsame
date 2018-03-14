@@ -1,29 +1,25 @@
 <?php
 
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Valutazione extends Migration
-{
+class Agenda extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
-        Schema::create('Valutazione', function($table) {
+    public function up() {
+        Schema::create('Agenda', function($table) {
             $table->increments('ID');
-            $table->text('Voto');
             $table->date('Data');
-            $table->integer('Ora');
             $table->text('Materia');
             $table->text('Descrizione');
-            $table->text('CFStudente');
             $table->text('CFDocente');
-            $table->foreign('CFStudente')->references('CodiceFiscale')->on('Studente');
+            $table->integer('IdClasse');
             $table->foreign('CFDocente')->references('CodiceFiscale')->on('Docente');
+            $table->foreign('IdClasse')->references('IdClasse')->on('Classe');
         });
     }
 
@@ -32,8 +28,8 @@ class Valutazione extends Migration
      *
      * @return void
      */
-    public function down()
-    {
-        Schema::drop('Valutazione');
+    public function down() {
+        Schema::drop('Agenda');
     }
+
 }

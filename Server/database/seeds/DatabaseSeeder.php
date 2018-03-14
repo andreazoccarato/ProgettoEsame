@@ -16,11 +16,11 @@ class DatabaseSeeder extends Seeder {
         $this->call(StudenteSeeder::class);
         $this->call(DocenteSeeder::class);
         $this->call(CredenzialiSeeder::class);
-        $this->call(AssenzaSeeder::class);
         $this->call(LezioneSeeder::class);
         $this->call(GiustificaSeeder::class);
         $this->call(ValutazioneSeeder::class);
         $this->call(tbrDocenteClasseSeeder::class);
+        $this->call(AgendaSeeder::class);
     }
 
 }

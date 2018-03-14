@@ -14,19 +14,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.andrea.progettoesame.AgendaFragment;
 import com.example.andrea.progettoesame.MainFragment;
 import com.example.andrea.progettoesame.MySingleton;
 import com.example.andrea.progettoesame.R;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +32,8 @@ public class StudenteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MainFragment.OnFragmentInteractionListener,
         VisualizzaVotiFragment.OnFragmentInteractionListener,
-        ScanQrCodeFragment.OnFragmentInteractionListener{
+        ScanQrCodeFragment.OnFragmentInteractionListener,
+        AgendaFragment.OnFragmentInteractionListener{
 
     public String username;
     public String password;
@@ -85,19 +84,13 @@ public class StudenteActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.studente, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -119,7 +112,7 @@ public class StudenteActivity extends AppCompatActivity
         } else if (id == R.id.nav_assenze) {
 
         } else if (id == R.id.nav_agenda) {
-
+            fragment=new AgendaFragment();
         } else if (id == R.id.nav_profilo) {
 
         }
@@ -129,7 +122,6 @@ public class StudenteActivity extends AppCompatActivity
             ft.replace(R.id.mainFrame, fragment);
             ft.commit();
         }
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
