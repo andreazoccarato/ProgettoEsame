@@ -30,7 +30,7 @@ import static android.app.Activity.RESULT_OK;
  * Use the {@link ScanQrCodeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ScanQrCodeFragment extends Fragment implements ZXingScannerView.ResultHandler{
+public class ScanQrCodeFragment extends Fragment implements ZXingScannerView.ResultHandler {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -83,12 +83,12 @@ public class ScanQrCodeFragment extends Fragment implements ZXingScannerView.Res
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_scan_qr_code, container, false);
+        View view = inflater.inflate(R.layout.fragment_scan_qr_code, container, false);
 
         StudenteActivity activity = (StudenteActivity) getActivity();
-        Pair<String,String > myDataFromActivity = activity.getData();
-        this.username=myDataFromActivity.first;
-        this.password=myDataFromActivity.second;
+        Pair<String, String> myDataFromActivity = activity.getData();
+        this.username = myDataFromActivity.first;
+        this.password = myDataFromActivity.second;
 
 
         Button mButton = (Button) view.findViewById(R.id.fragment_Get_qrCode_scan);
@@ -129,11 +129,11 @@ public class ScanQrCodeFragment extends Fragment implements ZXingScannerView.Res
     @Override
     public void handleResult(Result rawResult) {
         System.out.println(rawResult.getText());
-        Intent i=new Intent(getContext(),StudenteActivity.class);
-        Bundle bundle=new Bundle();
-        bundle.putString("username",username);
-        bundle.putString("password",password);
-        bundle.putString("scanResult",rawResult.getText());
+        Intent i = new Intent(getContext(), StudenteActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("username", username);
+        bundle.putString("password", password);
+        bundle.putString("scanResult", rawResult.getText());
         i.putExtras(bundle);
         startActivity(i);
     }

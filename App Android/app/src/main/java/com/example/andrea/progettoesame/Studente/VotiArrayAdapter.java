@@ -34,9 +34,9 @@ public class VotiArrayAdapter extends ArrayAdapter<Voto> {
     }
 
     public VotiArrayAdapter(Activity context, ArrayList voti) {
-        super(context, R.layout.row_layout_voti ,voti);
-        this.context=context;
-        this.voti=voti;
+        super(context, R.layout.row_layout_voti, voti);
+        this.context = context;
+        this.voti = voti;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class VotiArrayAdapter extends ArrayAdapter<Voto> {
             // configure view holder
             viewHolder = new ViewHolder();
             viewHolder.materia = (TextView) rowView.findViewById(R.id.voti_materia);
-            viewHolder.data= (TextView) rowView.findViewById(R.id.voti_data);
+            viewHolder.data = (TextView) rowView.findViewById(R.id.voti_data);
             viewHolder.description = (TextView) rowView.findViewById(R.id.voti_descrizione);
             viewHolder.voto = (TextView) rowView.findViewById(R.id.voto);
             // take memory of the view
@@ -66,9 +66,9 @@ public class VotiArrayAdapter extends ArrayAdapter<Voto> {
             // Log steTag()
             Log.d(TAG, "getTag() for object in position: " + position);
         }
-        String voto=v.getVoto();
+        String voto = v.getVoto();
 
-        switch (voto){
+        switch (voto) {
             case "3":
                 viewHolder.voto.setText("3");
                 viewHolder.voto.setBackgroundResource(R.drawable.circle_red);

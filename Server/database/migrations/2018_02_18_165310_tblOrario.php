@@ -12,7 +12,7 @@ class TblOrario extends Migration {
      */
     public function up() {
         Schema::create('tblOrario', function($table) {
-            $table->increments('ID');
+            $table->increments('ID')->primary();
             $table->boolean('00:00')->default(true);
             $table->boolean('01:00')->default(true);
             $table->boolean('02:00')->default(true);

@@ -1,7 +1,7 @@
-<LinearLayout
-    xmlns:adroid="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:adroid="http://schemas.android.com/apk/res/android"
     adroid:layout_height="match_parent"
     adroid:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res-auto"
     adroid:orientation="vertical">
 
 
@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
-        android:layout_marginTop="45dp">
+        android:layout_marginTop="57dp">
 
         <devs.mulham.horizontalcalendar.HorizontalCalendarView
             android:id="@+id/calendarView"
@@ -28,12 +28,11 @@
         adroid:textSize="25dp"
         adroid:textStyle="bold"
         adroid:layout_marginTop="10dp"
-        adroid:id="@+id/agenda_fragment_textView"/>
+        adroid:id="@+id/agenda_fragment_textView_lezioni"/>
 
-    <ListView
-        adroid:layout_width="match_parent"
-        adroid:layout_height="wrap_content"
-        adroid:id="@+id/list">
-    </ListView>
+    <android.support.v7.widget.RecyclerView
+        adroid:id="@+id/eventi_recyclerView"
+        adroid:layout_height="match_parent"
+        adroid:layout_width="match_parent"/>
 
 </LinearLayout>

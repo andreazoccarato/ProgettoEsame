@@ -17,7 +17,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.andrea.progettoesame.MainActivity;
 import com.example.andrea.progettoesame.MySingleton;
 import com.example.andrea.progettoesame.R;
 
@@ -25,7 +24,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,12 +35,11 @@ public class VisualizzaVotiFragment extends ListFragment implements AdapterView.
     private String mParam1;
     private String mParam2;
 
-    private ArrayList<Voto>voti;
+    private ArrayList<Voto> voti;
 
     private OnFragmentInteractionListener mListener;
 
     public VisualizzaVotiFragment() {
-        // Required empty public constructor
     }
 
     public static VisualizzaVotiFragment newInstance(String param1, String param2) {
@@ -66,7 +63,7 @@ public class VisualizzaVotiFragment extends ListFragment implements AdapterView.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view= inflater.inflate(R.layout.fragment_visualizza_voti, container, false);
+        View view = inflater.inflate(R.layout.fragment_visualizza_voti, container, false);
         return view;
     }
 
@@ -105,42 +102,44 @@ public class VisualizzaVotiFragment extends ListFragment implements AdapterView.
 
         String url = "http://192.168.1.104:8000/api/getVoti";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>()
-                {
+                new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("------------RISPOSTA------------");
-                        JSONObject json= null;
-                        String risp="";String vot="";String dat="";String desc="";String mat="";
+                        JSONObject json = null;
+                        String risp = "";
+                        String vot = "";
+                        String dat = "";
+                        String desc = "";
+                        String mat = "";
                         try {
                             json = new JSONObject(response);
-                            risp=json.getString("Voti");
-                            if(risp.equals("")){
-                                Toast.makeText(getContext(),"Nessun Voto",Toast.LENGTH_SHORT).show();
-                            }else{
-                                String app[]=risp.split("Voto");
-                                for (int i=1; i<app.length;i++){
-                                    String app2[]=app[i].split("\\\"");
-                                    for (int j=0; j<app2.length;j++){
-                                        String app3[]=app2[j].split(",");
-                                        switch (j){
+                            risp = json.getString("Voti");
+                            if (risp.equals("")) {
+                                Toast.makeText(getContext(), "Nessun Voto", Toast.LENGTH_SHORT).show();
+                            } else {
+                                String app[] = risp.split("Voto");
+                                for (int i = 1; i < app.length; i++) {
+                                    String app2[] = app[i].split("\\\"");
+                                    for (int j = 0; j < app2.length; j++) {
+                                        String app3[] = app2[j].split(",");
+                                        switch (j) {
                                             case 2:
-                                                vot=app3[0];
+                                                vot = app3[0];
                                                 break;
                                             case 6:
-                                                mat=app3[0];
+                                                mat = app3[0];
                                                 break;
                                             case 10:
-                                                dat=app3[0];
+                                                dat = app3[0];
                                                 break;
                                             case 14:
-                                                desc=app3[0];
+                                                desc = app3[0];
                                                 break;
                                         }
                                     }
-                                    Voto v=new Voto(vot,mat,desc,dat);
+                                    Voto v = new Voto(vot, mat, desc, dat);
                                     voti.add(v);
-
                                     VotiArrayAdapter adapter = new VotiArrayAdapter(getActivity(), voti);
                                     //use this below for a correct initialization
                                     setListAdapter(adapter);
@@ -162,7 +161,7 @@ public class VisualizzaVotiFragment extends ListFragment implements AdapterView.
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                Pair p=((StudenteActivity)getActivity()).getData();
+                Pair p = ((StudenteActivity) getActivity()).getData();
                 params.put("username", (String) p.first);
                 params.put("password", (String) p.second);
                 return params;

@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -22,9 +23,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.andrea.progettoesame.AgendaFragment;
 import com.example.andrea.progettoesame.MainFragment;
 import com.example.andrea.progettoesame.MySingleton;
+import com.example.andrea.progettoesame.ProfiloFragment;
 import com.example.andrea.progettoesame.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +37,8 @@ public class StudenteActivity extends AppCompatActivity
         MainFragment.OnFragmentInteractionListener,
         VisualizzaVotiFragment.OnFragmentInteractionListener,
         ScanQrCodeFragment.OnFragmentInteractionListener,
-        AgendaFragment.OnFragmentInteractionListener{
+        AgendaFragment.OnFragmentInteractionListener,
+        AssenzeFragment.OnFragmentInteractionListener {
 
     public String username;
     public String password;
@@ -56,13 +61,13 @@ public class StudenteActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        Bundle bundle=getIntent().getExtras();
-        this.username=bundle.getString("username");
-        this.password=bundle.getString("password");
-        this.scanResult=bundle.getString("scanResult");
+        Bundle bundle = getIntent().getExtras();
+        this.username = bundle.getString("username");
+        this.password = bundle.getString("password");
+        this.scanResult = bundle.getString("scanResult");
 
-        if(!scanResult.equals("")){
-            Toast.makeText(StudenteActivity.this,scanResult,Toast.LENGTH_LONG).show();
+        if (!scanResult.equals("")) {
+            Toast.makeText(StudenteActivity.this, scanResult, Toast.LENGTH_LONG).show();
             setPresenza();
         }
 
@@ -91,8 +96,15 @@ public class StudenteActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        Fragment fragment = null;
         if (id == R.id.action_settings) {
-            return true;
+            fragment = new ProfiloFragment();
+        }
+
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame, fragment);
+            ft.commit();
         }
 
         return super.onOptionsItemSelected(item);
@@ -106,15 +118,15 @@ public class StudenteActivity extends AppCompatActivity
 
         Fragment fragment = null;
         if (id == R.id.nav_Scan) {
-            fragment=new ScanQrCodeFragment();
+            fragment = new ScanQrCodeFragment();
         } else if (id == R.id.nav_Voti) {
-            fragment=new VisualizzaVotiFragment();
+            fragment = new VisualizzaVotiFragment();
         } else if (id == R.id.nav_assenze) {
-
+            fragment = new AssenzeFragment();
         } else if (id == R.id.nav_agenda) {
-            fragment=new AgendaFragment();
+            fragment = new AgendaFragment();
         } else if (id == R.id.nav_profilo) {
-
+            fragment = new ProfiloFragment();
         }
 
         if (fragment != null) {
@@ -128,8 +140,8 @@ public class StudenteActivity extends AppCompatActivity
         return true;
     }
 
-    public Pair<String,String> getData(){
-        Pair p=new Pair(username,password);
+    public Pair<String, String> getData() {
+        Pair p = new Pair(username, password);
         return p;
     }
 
@@ -138,24 +150,23 @@ public class StudenteActivity extends AppCompatActivity
 
     }
 
-    public void setPresenza(){
-        String url="http://192.168.1.104:8000/api/setPresenza";
+    public void setPresenza() {
+        String url = "http://192.168.1.104:8000/api/setPresenza";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>()
-                {
+                new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("------------RISPOSTA------------");
-                        System.out.println("----------------------------------------"+response);
-                        JSONObject json= null;
-                        String risultato="";
+                        System.out.println("----------------------------------------" + response);
+                        JSONObject json = null;
+                        String risultato = "";
                         try {
                             json = new JSONObject(response);
-                            risultato=json.getString("Risultato");
+                            risultato = json.getString("Risultato");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Toast.makeText(StudenteActivity.this,risultato,Toast.LENGTH_LONG).show();
+                        Toast.makeText(StudenteActivity.this, risultato, Toast.LENGTH_LONG).show();
                     }
                 },
                 new Response.ErrorListener() {
@@ -170,7 +181,7 @@ public class StudenteActivity extends AppCompatActivity
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("username", username);
                 params.put("password", password);
-                params.put("scanResult",scanResult);
+                params.put("scanResult", scanResult);
                 return params;
             }
         };
@@ -178,4 +189,5 @@ public class StudenteActivity extends AppCompatActivity
 
         MySingleton.getInstance(this).addToRequestQueue(postRequest);
     }
+
 }

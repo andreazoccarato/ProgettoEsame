@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -51,17 +53,16 @@ public class MainActivity extends AppCompatActivity {
     private void loginToServer() {
         String url = "http://192.168.1.104:8000/api/login";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>()
-                {
+                new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         System.out.println("------------RISPOSTA------------");
-                        System.out.println("----------------------------------------"+response);
-                        JSONObject json= null;
-                        String ruolo="";
+                        System.out.println("----------------------------------------" + response);
+                        JSONObject json = null;
+                        String ruolo = "";
                         try {
                             json = new JSONObject(response);
-                            ruolo=json.getString("Ruolo");
+                            ruolo = json.getString("Ruolo");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                             Studente();
                         } else if (ruolo.equals("Docente")) {
                             Docente();
-                        }else{
+                        } else {
                             Toast.makeText(MainActivity.this, "Username o/e password non corretti", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -100,23 +101,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void Docente(){
-        Intent i=new Intent(MainActivity.this, DocenteActivity.class);
-        Bundle bundle=new Bundle();
-        bundle.putString("username",username);
-        bundle.putString("password",password);
+    public void Docente() {
+        Intent i = new Intent(MainActivity.this, DocenteActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("username", username);
+        bundle.putString("password", password);
         i.putExtras(bundle);
-        startActivityForResult(i,DOCENTE);
+        startActivityForResult(i, DOCENTE);
     }
 
-    public void Studente(){
-        Intent i=new Intent(MainActivity.this, StudenteActivity.class);
-        Bundle bundle=new Bundle();
-        bundle.putString("username",username);
-        bundle.putString("password",password);
-        bundle.putString("scanResult","");
+    public void Studente() {
+        Intent i = new Intent(MainActivity.this, StudenteActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("username", username);
+        bundle.putString("password", password);
+        bundle.putString("scanResult", "");
         i.putExtras(bundle);
-        startActivityForResult(i,STUDENTE);
+        startActivityForResult(i, STUDENTE);
     }
 
 
@@ -125,15 +126,15 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 System.out.println("From Studente");
             }
-        }else if(requestCode == DOCENTE){
+        } else if (requestCode == DOCENTE) {
             if (resultCode == RESULT_OK) {
                 System.out.println("From Docente");
             }
         }
     }
 
-    public Pair<String,String> getData(){
-        Pair p=new Pair(username,password);
+    public Pair<String, String> getData() {
+        Pair p = new Pair(username, password);
         return p;
     }
 

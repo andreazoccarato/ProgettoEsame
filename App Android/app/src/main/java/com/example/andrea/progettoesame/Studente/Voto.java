@@ -11,11 +11,11 @@ public class Voto {
     public String descrizione;
     public String data;
 
-    public Voto(String voto,String materia,String descrizione,String data){
-        this.voto=voto;
-        this.materia=materia;
-        this.descrizione=descrizione;
-        this.data=data;
+    public Voto(String voto, String materia, String descrizione, String data) {
+        this.voto = voto;
+        this.materia = materia;
+        this.descrizione = descrizione;
+        this.data = data;
     }
 
     public String getVoto() {
@@ -26,7 +26,9 @@ public class Voto {
         return materia;
     }
 
-    public String getData() { return data; }
+    public String getData() {
+        return data;
+    }
 
     public String getDescrizione() {
         return descrizione;

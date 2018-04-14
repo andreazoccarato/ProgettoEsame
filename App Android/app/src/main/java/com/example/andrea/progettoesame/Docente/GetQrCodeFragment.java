@@ -52,7 +52,7 @@ public class GetQrCodeFragment extends Fragment {
 
     public static final int WHITE = 0xFFFFFFFF;
     public static final int BLACK = 0xFF000000;
-    public final static int WIDTH=350;
+    public final static int WIDTH = 350;
 
     private String username;
     private String password;
@@ -94,15 +94,15 @@ public class GetQrCodeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_get_qr_code, container, false);
+        View view = inflater.inflate(R.layout.fragment_get_qr_code, container, false);
 
         mListener.onFragmentInteraction(null);
 
         //Prelevo credenziali dall'activity docente
         DocenteActivity activity = (DocenteActivity) getActivity();
-        Pair<String,String > myDataFromActivity = activity.getData();
-        this.username=myDataFromActivity.first;
-        this.password=myDataFromActivity.second;
+        Pair<String, String> myDataFromActivity = activity.getData();
+        this.username = myDataFromActivity.first;
+        this.password = myDataFromActivity.second;
 
         //inizializzo
         Button mButton = (Button) view.findViewById(R.id.getQrcode);
@@ -111,19 +111,18 @@ public class GetQrCodeFragment extends Fragment {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                String url="http://192.168.1.104:8000/api/qrCode";
+                String url = "http://192.168.1.104:8000/api/qrCode";
                 StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                        new Response.Listener<String>()
-                        {
+                        new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 System.out.println("------------RISPOSTA------------");
-                                System.out.println("----------------------------------------"+response);
-                                JSONObject json= null;
-                                String requestQrCode="";
+                                System.out.println("----------------------------------------" + response);
+                                JSONObject json = null;
+                                String requestQrCode = "";
                                 try {
                                     json = new JSONObject(response);
-                                    requestQrCode=json.getString("qrCodeRequest");
+                                    requestQrCode = json.getString("qrCodeRequest");
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

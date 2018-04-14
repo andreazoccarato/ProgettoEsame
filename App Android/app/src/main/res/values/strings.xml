@@ -14,7 +14,7 @@
     <string name="TitleLogin">Login</string>
     <string name="getQrCode">get qr code</string>
     <string name="title_activity_docente">DocenteActivity</string>
-
+    <string name="Profilo">Profilo</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>

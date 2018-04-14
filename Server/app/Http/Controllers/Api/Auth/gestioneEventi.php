@@ -21,9 +21,21 @@ class gestioneEventi extends Controller {
         $data = $request->input('data');
 
         $result = $this->database->getEventsByCred($username, $password, $data);
-
-        $risposta = Array("Eventi" => $result);
         $this->database->disconnect();
+        
+        $risposta = Array("Eventi" => $result);
+        echo json_encode($risposta);
+    }
+
+    public function getEventiByClass(Request $request) {
+        $this->database->connect();
+
+        $classe = $request->input('idClasse');
+        
+        $result = $this->database->getEventsByClass($classe);
+        $this->database->disconnect();
+        
+        $risposta = Array("Eventi" => $result);
         echo json_encode($risposta);
     }
 

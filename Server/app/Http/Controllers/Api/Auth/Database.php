@@ -259,9 +259,10 @@ class Database {
         $arrayLezioni = $this->conn->query($qryLezione)->fetchAll(PDO::FETCH_ASSOC);
         $qryCompiti = "SELECT Agenda.* "
                 . "FROM Agenda "
-                . "WHERE IdClasse='" . $idClasse . "' AND Data='".$data."';";
+                . "WHERE IdClasse='" . $idClasse . "' AND Data='" . $data . "';";
         $arrayCompiti = $this->conn->query($qryCompiti)->fetchAll(PDO::FETCH_ASSOC);
         $ris = array('Lezioni', $arrayLezioni, 'Compiti', $arrayCompiti);
+        //$ris = array(Array("Lezioni" => $arrayLezioni), Array("Compiti" => $arrayCompiti));
         return $ris;
     }
 
@@ -270,7 +271,52 @@ class Database {
      */
 
     function getEventsByClass($idClasse) {
-        
+        $qryLezione = "SELECT Lezione.* "
+                . "FROM Lezione INNER JOIN Docente ON Lezione.CFDocente=Docente.CodiceFiscale INNER JOIN tbrDocenteClasse ON Docente.CodiceFiscale=tbrDocenteClasse.CodiceFiscale "
+                . "WHERE tbrDocenteClasse.IdClasse=" . $idClasse . ";";
+        $arrayLezioni = $this->conn->query($qryLezione)->fetchAll(PDO::FETCH_ASSOC);
+        $qryCompiti = "SELECT Agenda.* "
+                . "FROM Agenda "
+                . "WHERE IdClasse=" . $idClasse;
+        $arrayCompiti = $this->conn->query($qryCompiti)->fetchAll(PDO::FETCH_ASSOC);
+        $ris = array('Lezioni', $arrayLezioni, 'Compiti', $arrayCompiti);
+        //$ris = array(Array("Lezioni" => $arrayLezioni), Array("Compiti" => $arrayCompiti));
+        return $ris;
+    }
+
+    /*
+     * Metodo che mi prende le assenze dello studente a partire dalle sue credenziali
+     */
+
+    function getAssenze($username, $password) {
+        $qryAssenze = "";
+    }
+
+    /*
+     * Metodo che preleva le informazioni dell'utente
+     */
+
+    function getProfilo($username, $password) {
+        $qryInfoStud = "SELECT Nome,Cognome,DataNascita "
+                . "FROM Studente INNER JOIN Credenziali ON Studente.IdCredenziali=Credenziali.ID "
+                . "WHERE Username='" . $username . "' AND Password='" . $password . "'";
+        $arrayInfoStud = $this->conn->query($qryInfoStud)->fetchAll(PDO::FETCH_ASSOC);
+        if (sizeof($arrayInfoStud) != 0) {
+            return $arrayInfoStud;
+        } else {
+            $qryInfoDoc = "SELECT Nome,Cognome,DataNascita "
+                    . "FROM Docente INNER JOIN Credenziali ON Docente.IdCredenziali=Credenziali.ID "
+                    . "WHERE Username='" . $username . "' AND Password='" . $password . "'";
+            return $arrayInfoDoc = $this->conn->query($qryInfoDoc)->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
+    
+    function getClassiDocente($username,$password){
+        $CFDocente=$this->getIdDocente($username, $password);
+        $qryClassi="SELECT Classe.* "
+                . "FROM Classe INNER JOIN tbrDocenteClasse ON Classe.IdClasse=tbrDocenteClasse.IdClasse "
+                . "WHERE CodiceFiscale='".$CFDocente."';";
+        return $arrayClassi = $this->conn->query($qryClassi)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /*
@@ -389,6 +435,25 @@ class Database {
 
     function insertPresenza($username, $password, $useDocente, $passDocente, $data, $scuola, $classe, $cod) {
         
+    }
+
+    /*
+     * METODI DI MODIFICA
+     * -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     * -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     */
+
+    function modificaCredenziali($newUsername, $newPassword, $oldUsername, $oldPassword) {
+        $sql = "UPDATE Credenziali "
+                . "SET Username='" . $newUsername . "', Password='" . $newPassword . "' "
+                . "WHERE Username='" . $oldUsername . "' AND Password='" . $oldPassword . "';";
+        $this->preparedStatement = $this->conn->prepare($sql);
+        $this->preparedStatement->execute();
+        $qry = " SELECT * FROM Credenziali "
+                . "WHERE Username='" . $newUsername . "' AND Password='" . $newPassword . "'";
+        $result = $this->conn->query($qry);
+        $app = $result->fetchColumn(0);
+        return $app != "";
     }
 
 }
