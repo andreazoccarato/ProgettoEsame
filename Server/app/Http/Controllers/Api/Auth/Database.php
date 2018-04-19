@@ -124,39 +124,29 @@ class Database {
      */
 
     function requestQrCode($username, $password) {
-        $codF = getIdDocente($username, $password);
+        $codF = $this->getIdDocente($username, $password);
         $currentData = date("j-n-Y", time());
-        $qry = "SELECT tblQrCode.Giorno "
+        $qry = "SELECT tblQrCode.* "
                 . "FROM tblQrCode "
                 . "WHERE CodiceFiscale='" . $codF . "' AND Giorno='" . $currentData . "'";
-        $result = $this->conn->query($qry);
-        $app = $result->fetchColum(0);
-        if ($app != "") {
-            return true;
-        } else {
-            return false;
-        }
+        $array = $this->conn->query($qry)->fetchAll(PDO::FETCH_ASSOC);
+        return $array;
     }
 
     /*
      * Metodo che controlla l'esistenza del qrCode
      */
 
-    function checkQrCode($username, $password, $giorno, $scuola, $classe, $cod) {
-        $isPresente = studenteGiàPresente($username, $password, $giorno, $scuola, $classe);
-        if ($isPresente == TRUE) {
-            return "Studente già presente";
+    function checkQrCode($giorno, $scuola, $classe, $cod) {
+        $qryCheck = "SELECT Count(*) AS qrCode "
+                . "FROM tblQrCode "
+                . "WHERE Giorno='" . $giorno . "' AND CodiceControllo=" . $cod . " AND IdClasse=" . $classe . " AND IdScuola=" . $scuola;
+        $resultQry = $this->conn->query($qryCheck);
+        $count = $resultQry->fetchColumn(0);
+        if ($count == 0) {
+            return false;
         } else {
-            $qryCheck = "SELECT tblQrCode.* "
-                    . "FROM tblQrCode "
-                    . "WHERE Giorno='" . $giorno . "' AND CodiceControllo=" . $cod . " AND IdClasse=" . $classe . " AND IdScuola=" . $scuola;
-            $resultQry = $this->conn->query($qryCheck);
-            $count = $resultQry->fetchColumn(0);
-            if ($count != 0) {
-                return;
-            } else {
-                return "NOK";
-            }
+            return true;
         }
     }
 
@@ -164,8 +154,8 @@ class Database {
      * Metodo che controlla se lo studente è già presente
      */
 
-    function studenteGiàPresente($username, $password, $giorno, $scuola, $classe) {
-        
+    function studenteGiàAssente($username, $password, $giorno, $scuola, $classe) {
+        //Controlla se all'interno della tabella Assenza non ci sia lo studente in quel giorno
     }
 
     /*
@@ -181,6 +171,18 @@ class Database {
     function getIdDocente($username, $password) {
         $qry = "SELECT Docente.CodiceFiscale "
                 . "FROM Docente INNER JOIN Credenziali ON Docente.IdCredenziali=Credenziali.ID "
+                . "WHERE Username='" . $username . "' AND Password='" . $password . "'";
+        $result = $this->conn->query($qry);
+        return $result->fetchColumn(0);
+    }
+
+    /*
+     * Metodo che mi restitisce il codice fiscale dello studente, se esiste.
+     */
+
+    function getIdStudente($username, $password) {
+        $qry = "SELECT Studente.CodiceFiscale "
+                . "FROM Studente INNER JOIN Credenziali ON Studente.IdCredenziali=Credenziali.ID "
                 . "WHERE Username='" . $username . "' AND Password='" . $password . "'";
         $result = $this->conn->query($qry);
         return $result->fetchColumn(0);
@@ -261,8 +263,7 @@ class Database {
                 . "FROM Agenda "
                 . "WHERE IdClasse='" . $idClasse . "' AND Data='" . $data . "';";
         $arrayCompiti = $this->conn->query($qryCompiti)->fetchAll(PDO::FETCH_ASSOC);
-        $ris = array('Lezioni', $arrayLezioni, 'Compiti', $arrayCompiti);
-        //$ris = array(Array("Lezioni" => $arrayLezioni), Array("Compiti" => $arrayCompiti));
+        $ris = array(Array("Lezioni" => $arrayLezioni), Array("Compiti" => $arrayCompiti));
         return $ris;
     }
 
@@ -280,7 +281,6 @@ class Database {
                 . "WHERE IdClasse=" . $idClasse;
         $arrayCompiti = $this->conn->query($qryCompiti)->fetchAll(PDO::FETCH_ASSOC);
         $ris = array('Lezioni', $arrayLezioni, 'Compiti', $arrayCompiti);
-        //$ris = array(Array("Lezioni" => $arrayLezioni), Array("Compiti" => $arrayCompiti));
         return $ris;
     }
 
@@ -310,13 +310,29 @@ class Database {
             return $arrayInfoDoc = $this->conn->query($qryInfoDoc)->fetchAll(PDO::FETCH_ASSOC);
         }
     }
-    
-    function getClassiDocente($username,$password){
-        $CFDocente=$this->getIdDocente($username, $password);
-        $qryClassi="SELECT Classe.* "
-                . "FROM Classe INNER JOIN tbrDocenteClasse ON Classe.IdClasse=tbrDocenteClasse.IdClasse "
-                . "WHERE CodiceFiscale='".$CFDocente."';";
+
+    /*
+     * Metodo che restituisce tutte le classi del docente
+     */
+
+    function getClassiDocente($username, $password) {
+        $CFDocente = $this->getIdDocente($username, $password);
+        $qryClassi = "SELECT Classe.IdClasse,Classe.Sezione,Classe.Indirizzo,Scuola.Nome "
+                . "FROM Classe INNER JOIN tbrDocenteClasse ON Classe.IdClasse=tbrDocenteClasse.IdClasse INNER JOIN Scuola ON Classe.CodiceScuola=Scuola.CodiceScuola "
+                . "WHERE CodiceFiscale='" . $CFDocente . "';";
         return $arrayClassi = $this->conn->query($qryClassi)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /*
+     * Metodo che restituisce gli studenti a partire dalla classe
+     */
+
+    function getStudentiByClasse($codClasse) {
+        $qryStudenti = "SELECT Nome,Cognome,DataNascita "
+                . "FROM Studente "
+                . "WHERE IdClasse=" . $codClasse . " "
+                . "ORDER BY Cognome,Nome";
+        return $arrayStudenti = $this->conn->query($qryStudenti)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /*
@@ -433,8 +449,47 @@ class Database {
      * Metodo che inserisce all'interno del database la presenza dello studente specificato
      */
 
-    function insertPresenza($username, $password, $useDocente, $passDocente, $data, $scuola, $classe, $cod) {
-        
+    function insertPresenza($data, $scuola, $classe, $username, $password) {
+        /*
+         * Dal momento che non salvo all'interno del DB le presenze effettuo solamente un controllo
+         * per vedere se è già stata inserita l'assenza
+         */
+        if (!$this->studenteGiàAssente($username, $password, $data, $scuola, $classe)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
+     * Metodo che setta l'assenza dello studente
+     * DA MODIFICARE (studenteGiàAssente, codice dell'orario e database)
+     */
+
+    function insertAssenza($data, $username, $password) {
+        $codF = $this->getIdStudente($username, $password);
+        if (!$this->studenteGiàAssente($username, $password, $data, $scuola, $classe)) {
+            //Inserisco assenza
+            $this->preparedStatement = $this->conn->prepare("INSERT INTO Assenza(CFStudente,Data,Giustificato) VALUES("
+                    . "'" . $codF . "',"
+                    . "'" . $data . "',"
+                    . "'false')");
+            $this->preparedStatement->execute();
+            //Prendo il codice dell'assenza
+            $qryAssenza = "SELECT Assenza.ID "
+                    . "FROM Assenza "
+                    . "WHERE CFStudente='" . $codF . "' AND Data='" . $data . "';";
+            $result = $this->conn->query($qryAssenza);
+            $idAssenza = $result->fetchColumn(0);
+            //Inserisco giornata
+            $this->preparedStatement = $this->conn->prepare("INSERT INTO tblOrario(Orario,IdAssenza) VALUES("
+                    . "'000000000000000000000000',"
+                    . "'" . $idAssenza . "')");
+            $this->preparedStatement->execute();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /*

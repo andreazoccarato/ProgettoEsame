@@ -12,12 +12,10 @@ class Firma extends Migration {
      */
     public function up() {
         Schema::create('Firma', function($table) {
-            $table->increments('CodiceFirma')->primary();
+            $table->increments('CodiceFirma');
             $table->text('Data');
-            $table->integer('IdOrario');
             $table->text('CFDocente');
             $table->integer('IdLezione');
-            $table->foreign('IdOrario')->references('ID')->on('tblOrario');
             $table->foreign('CFDocente')->references('CodiceFiscale')->on('Docente');
             $table->foreign('IdLezione')->references('ID')->on('Lezione');
         });

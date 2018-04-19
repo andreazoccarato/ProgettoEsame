@@ -21,8 +21,20 @@ class ClassiController extends Controller {
 
         $classi = $this->database->getClassiDocente($username, $password);
         $this->database->disconnect();
-        
+
         $risposta = Array("Classi" => $classi);
+        echo json_encode($risposta);
+    }
+
+    public function getStudentiByClasse(Request $request) {
+        $this->database->connect();
+
+        $codClasse = $request->input('codiceClasse');
+
+        $studenti = $this->database->getStudentiByClasse($codClasse);
+        $this->database->disconnect();
+
+        $risposta = Array("Studenti" => $studenti);
         echo json_encode($risposta);
     }
 

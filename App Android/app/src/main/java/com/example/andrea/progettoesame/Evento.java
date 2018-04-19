@@ -9,11 +9,13 @@ public class Evento {
     public String materia;
     public String descrizione;
     public String data;
+    public int itemType;
 
-    public Evento(String materia, String descrizione, String data) {
+    public Evento(String materia, String descrizione, String data, int itemType) {
         this.materia = materia;
         this.descrizione = descrizione;
         this.data = data;
+        this.itemType = itemType;
     }
 
     public String getMateria() {
@@ -27,6 +29,12 @@ public class Evento {
     public String getData() {
         return data;
     }
+
+    public int getItemType() {
+        return itemType;
+    }
+
+
 
     @Override
     public String toString() {

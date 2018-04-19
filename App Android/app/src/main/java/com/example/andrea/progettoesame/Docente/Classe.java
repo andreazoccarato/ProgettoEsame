@@ -6,14 +6,24 @@ package com.example.andrea.progettoesame.Docente;
 
 public class Classe {
 
+    public String codClasse;
     public String clsez;
     public String indirizzo;
     public String scuola;
 
-    public Classe(String clsez, String indirizzo, String scuola) {
+    public Classe(String codClasse, String clsez, String indirizzo, String scuola) {
+        this.codClasse = codClasse;
         this.clsez = clsez;
         this.indirizzo = indirizzo;
         this.scuola = scuola;
+    }
+
+    public String getCodClasse() {
+        return codClasse;
+    }
+
+    public void setCodClasse(String codClasse) {
+        this.codClasse = codClasse;
     }
 
     public String getClsez() {

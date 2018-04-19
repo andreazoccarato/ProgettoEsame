@@ -22,6 +22,14 @@ class LezioneSeeder extends Seeder {
             'CFDocente' => 'DONELI60S20L736G',
             'IdClasse' => 1
         ));
+        DB::table('Lezione')->insert(array(
+            'Data' => '15/04/2018',
+            'Ora' => '3',
+            'Materia' => 'Informatica',
+            'Descrizione' => 'Normalizzazione',
+            'CFDocente' => 'CRLSVG60S20L736G',
+            'IdClasse' => 1
+        ));
     }
 
 }

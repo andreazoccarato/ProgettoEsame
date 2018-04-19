@@ -26,7 +26,9 @@ class qrCodeController extends Controller {
         $username = $request->input('username');
         $password = $request->input('password');
 
-        if (requestQrCode($username, $password)) {
+        $result = $this->database->requestQrCode($username, $password);
+
+        if (count($result) == 0) {
             $idDoc = $this->database->getIdDocente($username, $password);
             $scuola = $this->database->getScuola($username, $password);
             $classe = $this->database->getClasse($username, $password);
@@ -36,16 +38,16 @@ class qrCodeController extends Controller {
 
             $strQrCode = $idDoc . "-" . $scuola . "-" . $classe . "-" . $time . "-" . $random;
             $this->database->insertQrCode($data, $random, $scuola, $classe, $idDoc);
-            $this->database->disconnect();
 
             QRcode::png($strQrCode, "test.png", "L", 5, 5);
 
             $risposta = Array("qrCodeRequest" => $strQrCode);
             echo json_encode($risposta);
         } else {
-            $risposta = Array("qrCodeRequest" => "denied");
+            $risposta = Array("qrCodeRequest" => $result);
             echo json_encode($risposta);
         }
+        $this->database->disconnect();
     }
 
     public function setPresenza(Request $request) {
@@ -56,42 +58,46 @@ class qrCodeController extends Controller {
         $scuola = $request->input('scuola');
         $classe = $request->input('classe');
         $cod = $request->input('codice');
-
         $data = $request->input('data');
+        $presenzaOassenza = $request->input('presenzaOassenza');
 
-        $risControllo = checkQrCode($username, $password, $useDocente, $passDocente, $data, $scuola, $classe, $cod);
-
-        switch ($risControllo) {
-            case "OK":
-                $this->database->connect();
-                $ris = $this->database->insertPresenza($username, $password, $useDocente, $passDocente, $data, $scuola, $classe, $cod);
-                $this->database->disconnect();
-                $risposta = Array("Risultato" => $ris);
-                echo json_encode($risposta);
-                break;
-            case "NOK":
-                $risposta = Array("Risultato" => "Impossibile inserire presenza");
-                echo json_encode($risposta);
-                break;
-            case "Studente già presente":
-                $risposta = Array("Risultato" => "Studente già presente");
-                echo json_encode($risposta);
-                break;
+        $valido = $this->database->checkQrCode($data, $scuola, $classe, $cod);
+        if ($valido == true) {
+            if ($presenzaOassenza == "presenza") {
+                $this->insertPresenza($data, $scuola, $classe, $username, $password, $useDocente, $passDocente);
+            } else {
+                $this->insertAssenza($data, $scuola, $classe, $username, $password, $useDocente, $passDocente);
+            }
+        } else {
+            $risposta = Array("qrCodeCheck" => "QrCode non valido");
+            echo json_encode($risposta);
         }
     }
 
-    private function requestQrCode($username, $password) {
+    private function insertPresenza($data, $scuola, $classe, $username, $password, $useDocente, $passDocente) {
         $this->database->connect();
-        $result = $this->database->requestQrCode($username, $password);
+        $ris = $this->database->insertPresenza($data, $scuola, $classe, $username, $password, $useDocente, $passDocente);
+        if ($ris) {
+            $risposta = Array("qrCodeCheck" => "Presenza inserita correttamente");
+            echo json_encode($risposta);
+        } else {
+            $risposta = Array("qrCodeCheck" => "Studente già presente");
+            echo json_encode($risposta);
+        }
         $this->database->disconnect();
-        return $result;
     }
 
-    private function checkQrCode($username, $password, $useDocente, $passDocente, $data, $scuola, $classe, $cod) {
+    private function insertAssenza($data, $scuola, $classe, $username, $password, $useDocente, $passDocente) {
         $this->database->connect();
-        $result = $this->database->checkQrCode($username, $password, $useDocente, $passDocente, $data, $scuola, $classe, $cod);
+        $ris = $this->database->insertAssenza($data, $scuola, $classe, $username, $password, $useDocente, $passDocente);
+        if ($ris) {
+            $risposta = Array("qrCodeCheck" => "Assenza inserita correttamente");
+            echo json_encode($risposta);
+        } else {
+            $risposta = Array("qrCodeCheck" => "Studente già assenza");
+            echo json_encode($risposta);
+        }
         $this->database->disconnect();
-        return $result;
     }
 
 }

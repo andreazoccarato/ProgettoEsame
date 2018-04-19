@@ -2,7 +2,8 @@ package com.example.andrea.progettoesame.Docente;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
@@ -22,10 +23,12 @@ import com.example.andrea.progettoesame.Studente.StudenteActivity;
 import com.example.andrea.progettoesame.Studente.VotiArrayAdapter;
 import com.example.andrea.progettoesame.Studente.Voto;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,8 +53,7 @@ public class ClassiFragment extends ListFragment implements AdapterView.OnItemCl
 
         classi = new ArrayList<>();
 
-        /*
-        String url = "http://192.168.1.104:8000/api/getVoti";
+        String url = "http://192.168.1.104:8000/api/getClassi";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -60,6 +62,17 @@ public class ClassiFragment extends ListFragment implements AdapterView.OnItemCl
                         JSONObject json = null;
                         try {
                             json = new JSONObject(response);
+                            JSONArray array = json.getJSONArray("Classi");
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject classe = array.getJSONObject(i);
+                                String idClasse = classe.getString("IdClasse");
+                                String sezione = classe.getString("Sezione");
+                                String indirizzo = classe.getString("Indirizzo");
+                                String nome = classe.getString("Nome");
+                                classi.add(new Classe(idClasse,sezione, indirizzo, nome));
+                            }
+                            ClassiAdapter adapter = new ClassiAdapter(getActivity(), classi);
+                            setListAdapter(adapter);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -76,7 +89,7 @@ public class ClassiFragment extends ListFragment implements AdapterView.OnItemCl
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                Pair p = ((StudenteActivity) getActivity()).getData();
+                Pair p = ((DocenteActivity) getActivity()).getData();
                 params.put("username", (String) p.first);
                 params.put("password", (String) p.second);
                 return params;
@@ -85,18 +98,21 @@ public class ClassiFragment extends ListFragment implements AdapterView.OnItemCl
         //imposto un numero di tentativi in caso di com.android.volley.TimeoutError
         postRequest.setRetryPolicy(new DefaultRetryPolicy(1000, 10, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         MySingleton.getInstance(getContext()).addToRequestQueue(postRequest);
-        */
-        classi.add(new Classe("5ID", "Informatica", "Zuccante"));
-        classi.add(new Classe("5EA", "Elettronica", "Zuccante"));
-        classi.add(new Classe("5IC", "Informatica", "Zuccante"));
-        classi.add(new Classe("3AA", "Automazione", "Zuccante"));
-        ClassiAdapter adapter = new ClassiAdapter(getActivity(), classi);
-        setListAdapter(adapter);
+
+
         getListView().setOnItemClickListener(this);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        Bundle bundle = new Bundle();
+        bundle.putString("param1",classi.get(position).getClsez());
+        bundle.putString("param2",""+classi.get(position).getCodClasse());
+        ListaStudentiFragment listaStudentiFragment = new ListaStudentiFragment();
+        listaStudentiFragment.setArguments(bundle);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.mainFrame, listaStudentiFragment);
+        fragmentTransaction.commit();
     }
 }

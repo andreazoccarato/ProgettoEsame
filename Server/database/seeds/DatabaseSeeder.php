@@ -21,6 +21,10 @@ class DatabaseSeeder extends Seeder {
         $this->call(ValutazioneSeeder::class);
         $this->call(tbrDocenteClasseSeeder::class);
         $this->call(AgendaSeeder::class);
+        $this->call(FirmaSeeder::class);
+        $this->call(AssenzaSeeder::class);
+        $this->call(OrarioSeeder::class);
+        $this->call(GiustificaSeeder::class);
     }
 
 }

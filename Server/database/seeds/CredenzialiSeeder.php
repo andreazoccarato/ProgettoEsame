@@ -26,6 +26,34 @@ class CredenzialiSeeder extends Seeder {
             'Username' => 'doni',
             'Password' => 'doni001',
         ));
+        DB::table('Credenziali')->insert(array(
+            'Username' => 'leo',
+            'Password' => 'leo001',
+        ));
+        DB::table('Credenziali')->insert(array(
+            'Username' => 'eldiablo',
+            'Password' => 'eldiablo280',
+        ));
+        DB::table('Credenziali')->insert(array(
+            'Username' => 'luca',
+            'Password' => 'luca001',
+        ));
+        DB::table('Credenziali')->insert(array(
+            'Username' => 'camillo',
+            'Password' => 'murloc',
+        ));
+        DB::table('Credenziali')->insert(array(
+            'Username' => 'chri',
+            'Password' => 'chri',
+        ));
+        DB::table('Credenziali')->insert(array(
+            'Username' => 'vanzan',
+            'Password' => 'vanzan001',
+        ));
+        DB::table('Credenziali')->insert(array(
+            'Username' => 'marco',
+            'Password' => 'marco001',
+        ));
     }
 
 }

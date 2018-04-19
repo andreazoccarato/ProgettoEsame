@@ -23,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.andrea.progettoesame.Studente.StudenteActivity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -148,80 +149,52 @@ public class AgendaFragment extends Fragment {
                         System.out.println("------------RISPOSTA------------");
                         System.out.println(response);
                         JSONObject json = null;
-                        String risp = "";
-                        String dat = "";
-                        String desc = "";
-                        String mat = "";
 
                         EventiAdapter adapter = new EventiAdapter(getActivity(), eventi);
 
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
                         recyclerView.setLayoutManager(mLayoutManager);
                         recyclerView.setAdapter(adapter);
+
                         try {
                             json = new JSONObject(response);
-                            risp = json.getString("Eventi");
-                            if (risp.equals("[\"Lezioni\",[],\"Compiti\",[]]")) {
+                            JSONArray array = json.getJSONArray("Eventi");
+
+                            textViewLezioni.setText("Eventi");
+
+                            JSONObject lez = array.getJSONObject(0);
+                            JSONArray arrayLezioni = lez.getJSONArray("Lezioni");
+
+                            JSONObject com = array.getJSONObject(1);
+                            JSONArray arrayCompiti = com.getJSONArray("Compiti");
+
+                            if (arrayCompiti.length() == 0 && arrayLezioni.length() == 0) {
                                 textViewLezioni.setText("Nessun evento");
                                 adapter.notifyDataSetChanged();
                             } else {
-                                textViewLezioni.setText("");
-                                risp = risp.replaceAll("Compiti", "Lezioni");
-                                String primoSplit[] = risp.split("Lezioni");
+                                Evento lezioni_header = new Evento("", "Lezioni", "", EventiAdapter.VIEW_TYPE_HEADER);
+                                eventi.add(lezioni_header);
 
-                                String lezioni = primoSplit[1];
-                                lezioni = lezioni.replaceAll("\\[", "");
-                                lezioni = lezioni.replaceAll("\\]", "");
-                                lezioni = lezioni.substring(2, lezioni.length() - 2);
-                                String splitLezioni[] = lezioni.split("\\{");
-
-                                textViewLezioni.setText("Eventi");
-
-                                recyclerView.addItemDecoration(
-                                        new DividerItemDecoration(getActivity().getDrawable(R.drawable.compiti),
-                                                true, true));
-
-                                for (int i = 0; i < splitLezioni.length; i++) {
-                                    if (!splitLezioni[i].equals("")) {
-                                        String secondoSplitLezioni[] = splitLezioni[i].split(",");
-                                        String materia = secondoSplitLezioni[3];
-                                        materia = materia.replaceAll("\"", "");
-                                        String descrizione = secondoSplitLezioni[4];
-                                        descrizione = descrizione.replaceAll("\"", "");
-                                        String data = secondoSplitLezioni[1];
-                                        data = data.replaceAll("\"", "");
-                                        data = data.replaceAll("/", "");
-                                        Evento ev = new Evento(materia, data, descrizione);
-                                        eventi.add(ev);
-                                    }
+                                for (int i = 0; i < arrayLezioni.length(); i++) {
+                                    JSONObject jsonLezioni = arrayLezioni.getJSONObject(i);
+                                    String data = jsonLezioni.getString("Data");
+                                    String materia = jsonLezioni.getString("Materia");
+                                    String descrizione = jsonLezioni.getString("Descrizione");
+                                    eventi.add(new Evento(materia, descrizione, data, EventiAdapter.VIEW_TYPE_ITEM));
                                 }
 
-                                String compiti = primoSplit[2];
-                                compiti = compiti.replaceAll("\\[", "");
-                                compiti = compiti.replaceAll("\\]", "");
-                                compiti = compiti.substring(2);
-                                String splitCompiti[] = compiti.split("\\{");
 
-                                recyclerView.addItemDecoration(
-                                        new DividerItemDecoration(getActivity().getDrawable(R.drawable.compiti),
-                                                true, true));
+                                Evento compiti_header = new Evento("", "Compiti", "", EventiAdapter.VIEW_TYPE_HEADER);
+                                eventi.add(compiti_header);
 
-                                for (int i = 0; i < splitCompiti.length; i++) {
-                                    if (!splitCompiti[i].equals("")) {
-                                        String secondoSplitCompiti[] = splitCompiti[i].split(",");
-                                        String materia = secondoSplitCompiti[2];
-                                        materia = materia.replaceAll("\"", "");
-                                        String descrizione = secondoSplitCompiti[3];
-                                        descrizione = descrizione.replaceAll("\"", "");
-                                        String data = secondoSplitCompiti[1];
-                                        data = data.replaceAll("\"", "");
-                                        data = data.replaceAll("/", "");
-                                        Evento ev = new Evento(materia, data, descrizione);
-                                        eventi.add(ev);
-                                    }
+                                for (int i = 0; i < arrayCompiti.length(); i++) {
+                                    JSONObject jsonCompiti = arrayCompiti.getJSONObject(i);
+                                    String data = jsonCompiti.getString("Data");
+                                    String materia = jsonCompiti.getString("Materia");
+                                    String descrizione = jsonCompiti.getString("Descrizione");
+                                    eventi.add(new Evento(materia, descrizione, data, EventiAdapter.VIEW_TYPE_ITEM));
                                 }
                                 adapter.notifyDataSetChanged();
-
                             }
 
                         } catch (JSONException e) {

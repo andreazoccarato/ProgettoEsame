@@ -5,7 +5,7 @@
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    tools:context="com.example.andrea.progettoesame.StudenteActivity">
+    tools:context="com.example.andrea.progettoesame.Studente.StudenteActivity">
 
     <FrameLayout
         android:layout_width="match_parent"

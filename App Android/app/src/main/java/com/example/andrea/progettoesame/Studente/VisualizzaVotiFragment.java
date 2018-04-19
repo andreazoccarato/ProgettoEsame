@@ -20,6 +20,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.andrea.progettoesame.MySingleton;
 import com.example.andrea.progettoesame.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -107,44 +108,19 @@ public class VisualizzaVotiFragment extends ListFragment implements AdapterView.
                     public void onResponse(String response) {
                         System.out.println("------------RISPOSTA------------");
                         JSONObject json = null;
-                        String risp = "";
-                        String vot = "";
-                        String dat = "";
-                        String desc = "";
-                        String mat = "";
                         try {
                             json = new JSONObject(response);
-                            risp = json.getString("Voti");
-                            if (risp.equals("")) {
-                                Toast.makeText(getContext(), "Nessun Voto", Toast.LENGTH_SHORT).show();
-                            } else {
-                                String app[] = risp.split("Voto");
-                                for (int i = 1; i < app.length; i++) {
-                                    String app2[] = app[i].split("\\\"");
-                                    for (int j = 0; j < app2.length; j++) {
-                                        String app3[] = app2[j].split(",");
-                                        switch (j) {
-                                            case 2:
-                                                vot = app3[0];
-                                                break;
-                                            case 6:
-                                                mat = app3[0];
-                                                break;
-                                            case 10:
-                                                dat = app3[0];
-                                                break;
-                                            case 14:
-                                                desc = app3[0];
-                                                break;
-                                        }
-                                    }
-                                    Voto v = new Voto(vot, mat, desc, dat);
-                                    voti.add(v);
-                                    VotiArrayAdapter adapter = new VotiArrayAdapter(getActivity(), voti);
-                                    //use this below for a correct initialization
-                                    setListAdapter(adapter);
-                                }
+                            JSONArray array = json.getJSONArray("Voti");
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject jsonValutazioni = array.getJSONObject(i);
+                                String voto = jsonValutazioni.getString("Voto");
+                                String materia = jsonValutazioni.getString("Materia");
+                                String descrizione = jsonValutazioni.getString("Descrizione");
+                                String data = jsonValutazioni.getString("Data");
+                                voti.add(new Voto(voto, materia, descrizione, data));
                             }
+                            VotiArrayAdapter adapter = new VotiArrayAdapter(getActivity(), voti);
+                            setListAdapter(adapter);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

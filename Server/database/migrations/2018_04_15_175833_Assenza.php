@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Migrations\Migration;
 
-class TbrStudenteFirma extends Migration {
+class Assenza extends Migration {
 
     /**
      * Run the migrations.
@@ -11,14 +11,12 @@ class TbrStudenteFirma extends Migration {
      * @return void
      */
     public function up() {
-        Schema::create('tbrStudenteFirma', function($table) {
+        Schema::create('Assenza', function($table) {
             $table->increments('ID');
             $table->text('CFStudente');
-            $table->text('CodiceFirma');
-            $table->boolean('Assenza')->default(true);
-            $table->boolean('Giustificato')->default(true);
+            $table->text('Data');
+            $table->boolean('Giustificato')->default(false);
             $table->foreign('CFStudente')->references('CodiceFiscale')->on('Studente');
-            $table->foreign('CodiceFirma')->references('CodiceFirma')->on('Firma');
         });
     }
 
@@ -28,7 +26,7 @@ class TbrStudenteFirma extends Migration {
      * @return void
      */
     public function down() {
-        Schema::drop('tbrStudenteFirma');
+        Schema::drop('Assenza');
     }
 
 }

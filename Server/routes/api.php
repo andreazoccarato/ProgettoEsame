@@ -21,6 +21,7 @@ Route::post('getAssenze', 'Api\Auth\AssenzeController@getAssenze');
 Route::post('getProfilo', 'Api\Auth\ProfiloController@getProfilo');
 Route::post('setProfilo', 'Api\Auth\ProfiloController@updateProfilo');
 Route::post('getClassi', 'Api\Auth\ClassiController@getClassi');
+Route::post('getStudentiByClasse', 'Api\Auth\ClassiController@getStudentiByClasse');
 
 Route::middleware('auth:api')->group(function () {
     Route::get('posts', 'Api\PostController@index');

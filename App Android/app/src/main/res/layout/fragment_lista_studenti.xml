@@ -1,0 +1,23 @@
+<LinearLayout xmlns:adroid="http://schemas.android.com/apk/res/android"
+    adroid:layout_width="match_parent"
+    adroid:layout_height="match_parent"
+    adroid:orientation="vertical">
+
+    <TextView
+        adroid:id="@+id/lista_studenti_textView"
+        adroid:layout_width="wrap_content"
+        adroid:layout_height="wrap_content"
+        adroid:layout_gravity="center"
+        adroid:layout_marginTop="55dp"
+        adroid:textSize="35dp"
+        adroid:textStyle="bold"
+        adroid:text="5ID"
+        adroid:textColor="@color/blu"/>
+
+    <android.support.v7.widget.RecyclerView
+        adroid:id="@+id/lista_studenti_recyclerView"
+        adroid:layout_width="match_parent"
+        adroid:layout_height="match_parent"
+        adroid:layout_marginTop="10dp"/>
+
+</LinearLayout>
