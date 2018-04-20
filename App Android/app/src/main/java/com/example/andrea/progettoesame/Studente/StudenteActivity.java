@@ -37,8 +37,7 @@ public class StudenteActivity extends AppCompatActivity
         MainFragment.OnFragmentInteractionListener,
         VisualizzaVotiFragment.OnFragmentInteractionListener,
         ScanQrCodeFragment.OnFragmentInteractionListener,
-        AgendaFragment.OnFragmentInteractionListener,
-        AssenzeFragment.OnFragmentInteractionListener {
+        AgendaFragment.OnFragmentInteractionListener{
 
     public String username;
     public String password;

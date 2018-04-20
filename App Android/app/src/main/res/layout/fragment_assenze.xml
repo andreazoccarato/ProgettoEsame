@@ -15,9 +15,9 @@
         android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/assenze_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="15dp"
-        adroid:id="@+id/assenza_RecyclerView" />
+        android:layout_marginTop="15dp" />
 
 </LinearLayout>

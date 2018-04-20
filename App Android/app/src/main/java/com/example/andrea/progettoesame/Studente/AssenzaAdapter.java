@@ -32,10 +32,10 @@ public class AssenzaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         if (viewType == VIEW_TYPE_HEADER) {
             view = inflater.inflate(R.layout.header_item, parent, false);
-            return new com.example.andrea.progettoesame.EventiAdapter.ViewHolderHeader(view);
+            return new ViewHolderHeader(view);
         } else {
             view = inflater.inflate(R.layout.row_layout_assenze, parent, false);
-            return new com.example.andrea.progettoesame.EventiAdapter.ViewHolderItem(view);
+            return new ViewHolderItem(view);
         }
     }
 
@@ -84,13 +84,13 @@ public class AssenzaAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             tipo.setText(assenza.getTipologia());
             switch (assenza.getTipologia()) {
                 case "R":
-                    tipo.setBackgroundColor(R.drawable.circle_orange);
+                    tipo.setBackgroundResource(R.drawable.circle_orange);
                     break;
                 case "A":
-                    tipo.setBackgroundColor(R.drawable.circle_red);
+                    tipo.setBackgroundResource(R.drawable.circle_red);
                     break;
                 case "U":
-                    tipo.setBackgroundColor(R.drawable.circle_orange);
+                    tipo.setBackgroundResource(R.drawable.circle_orange);
                     break;
             }
             data.setText(assenza.getData());

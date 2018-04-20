@@ -15,7 +15,8 @@ class Assenza extends Migration {
             $table->increments('ID');
             $table->text('CFStudente');
             $table->text('Data');
-            $table->boolean('Giustificato')->default(false);
+            $table->text('Orario');
+            $table->text('Giustificato')->default('false');
             $table->foreign('CFStudente')->references('CodiceFiscale')->on('Studente');
         });
     }

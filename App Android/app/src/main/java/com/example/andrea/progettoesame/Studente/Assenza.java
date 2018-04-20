@@ -12,7 +12,7 @@ public class Assenza {
     private String tipologia;
     public int itemType;
 
-    public Assenza(int itemType, String data, String descrizione, boolean giustificato, String tipologia) {
+    public Assenza(String data, String descrizione, boolean giustificato, String tipologia,int itemType) {
         this.data = data;
         this.descrizione = descrizione;
         this.giustificato = giustificato;

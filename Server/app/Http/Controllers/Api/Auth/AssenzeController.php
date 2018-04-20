@@ -20,9 +20,12 @@ class AssenzeController extends Controller {
 
         $username = $request->input('username');
         $password = $request->input('password');
-        
-        $app = $this->database->getAssenze($username, $password);
+
+        $assenze = $this->database->getAssenze($username, $password);
         $this->database->disconnect();
+
+        $risposta = Array("Assenze" => $assenze);
+        echo json_encode($risposta);
     }
 
 }
