@@ -1,36 +1,36 @@
 <LinearLayout xmlns:adroid="http://schemas.android.com/apk/res/android"
-adroid:layout_height="match_parent"
-adroid:layout_width="match_parent"
-adroid:orientation="vertical">
+    adroid:layout_width="match_parent"
+    adroid:layout_height="match_parent"
+    adroid:orientation="vertical">
 
-<android.support.design.widget.AppBarLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/appBar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:theme="@style/AppTheme.AppBarOverlay"
-    android:layout_marginTop="57dp">
-
-    <devs.mulham.horizontalcalendar.HorizontalCalendarView
-        android:id="@+id/calendarView"
+    <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary" />
+        android:layout_marginTop="57dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-</android.support.design.widget.AppBarLayout>
+        <devs.mulham.horizontalcalendar.HorizontalCalendarView
+            android:id="@+id/calendarView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary" />
 
-<TextView
-    adroid:layout_width="wrap_content"
-    adroid:layout_height="wrap_content"
-    adroid:layout_gravity="center"
-    adroid:textSize="40dp"
-    adroid:textStyle="bold"
-    adroid:layout_marginTop="10dp"
-    adroid:id="@+id/agenda_fragment_textView_lezioni"/>
+    </android.support.design.widget.AppBarLayout>
 
-<android.support.v7.widget.RecyclerView
-    adroid:id="@+id/eventi_recyclerView"
-    adroid:layout_height="match_parent"
-    adroid:layout_width="match_parent"/>
+    <TextView
+        adroid:id="@+id/agenda_fragment_textView_lezioni"
+        adroid:layout_width="wrap_content"
+        adroid:layout_height="wrap_content"
+        adroid:layout_gravity="center"
+        adroid:layout_marginTop="10dp"
+        adroid:textSize="40dp"
+        adroid:textStyle="bold"
+        adroid:fontFamily="casual"/>
+
+    <android.support.v7.widget.RecyclerView
+        adroid:id="@+id/eventi_recyclerView"
+        adroid:layout_width="match_parent"
+        adroid:layout_height="match_parent" />
 
 </LinearLayout>

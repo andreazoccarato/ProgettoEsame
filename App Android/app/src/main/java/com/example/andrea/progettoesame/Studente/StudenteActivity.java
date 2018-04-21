@@ -1,5 +1,6 @@
 package com.example.andrea.progettoesame.Studente;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -22,6 +23,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.andrea.progettoesame.AgendaFragment;
 import com.example.andrea.progettoesame.MainFragment;
+import com.example.andrea.progettoesame.ModificaProfiloFragment;
 import com.example.andrea.progettoesame.MySingleton;
 import com.example.andrea.progettoesame.ProfiloFragment;
 import com.example.andrea.progettoesame.R;
@@ -29,6 +31,7 @@ import com.example.andrea.progettoesame.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,8 +39,7 @@ public class StudenteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MainFragment.OnFragmentInteractionListener,
         VisualizzaVotiFragment.OnFragmentInteractionListener,
-        ScanQrCodeFragment.OnFragmentInteractionListener,
-        AgendaFragment.OnFragmentInteractionListener{
+        AgendaFragment.OnFragmentInteractionListener {
 
     public String username;
     public String password;
@@ -47,6 +49,7 @@ public class StudenteActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studente);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -59,15 +62,15 @@ public class StudenteActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         Bundle bundle = getIntent().getExtras();
         this.username = bundle.getString("username");
         this.password = bundle.getString("password");
         this.scanResult = bundle.getString("scanResult");
 
         if (!scanResult.equals("")) {
-            Toast.makeText(StudenteActivity.this, scanResult, Toast.LENGTH_LONG).show();
-            setPresenza();
+            Toast.makeText(this, scanResult, Toast.LENGTH_LONG).show();
+            DialogFragmentQrCode dialogFragment = new DialogFragmentQrCode();
+            dialogFragment.show(getFragmentManager(), "ControlloPresenza");
         }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -78,12 +81,7 @@ public class StudenteActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     @Override
@@ -112,9 +110,7 @@ public class StudenteActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         Fragment fragment = null;
         if (id == R.id.nav_Scan) {
             fragment = new ScanQrCodeFragment();
@@ -144,49 +140,13 @@ public class StudenteActivity extends AppCompatActivity
         return p;
     }
 
+    public String[] getResult() {
+        return scanResult.split("-");
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {
 
-    }
-
-    public void setPresenza() {
-        String url = "http://192.168.1.104:8000/api/setPresenza";
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        System.out.println("------------RISPOSTA------------");
-                        System.out.println("----------------------------------------" + response);
-                        JSONObject json = null;
-                        String risultato = "";
-                        try {
-                            json = new JSONObject(response);
-                            risultato = json.getString("Risultato");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        Toast.makeText(StudenteActivity.this, risultato, Toast.LENGTH_LONG).show();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("username", username);
-                params.put("password", password);
-                params.put("scanResult", scanResult);
-                return params;
-            }
-        };
-        postRequest.setRetryPolicy(new DefaultRetryPolicy(1000, 10, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        MySingleton.getInstance(this).addToRequestQueue(postRequest);
     }
 
 }

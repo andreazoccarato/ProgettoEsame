@@ -470,16 +470,22 @@ class Database {
     function insertPresenza($data, $username, $password) {
         if ($this->studenteGiàAssente($username, $password, $data)) {
             $codF = $this->getIdStudente($username, $password);
-            $qryAssenza = "SELECT Orario "
+            $qryAssenza = "SELECT Orario,ID "
                     . "FROM Assenza "
                     . "WHERE CFStudente='" . $codF . "' AND Data='" . $data . "'";
-            $assenza = $this->conn->query($qryAssenza)->fetchColumn(0);
+            $query = $this->conn->query($qryAssenza);
+            $assenza = $query->fetchColumn(0);
+            $idAssenza = $query->fetchColumn(1);
             date_default_timezone_set("CET");
             $time = date("H", time());
             for ($i = $time; $i < 24; $i++) {
                 $assenza[$i] = "0";
             }
             echo $assenza;
+            $this->preparedStatement = $this->conn->prepare("UPDATE Assenza "
+                    . "SET Orario='" . $assenza . "' "
+                    . "WHERE ID=" . $idAssenza);
+            $this->preparedStatement->execute();
             return true;
         } else {
             return true;
@@ -493,23 +499,30 @@ class Database {
     function insertAssenza($data, $username, $password) {
         $codF = $this->getIdStudente($username, $password);
         if (!$this->studenteGiàAssente($username, $password, $data)) {
-            //Inserisco assenza
-            $this->preparedStatement = $this->conn->prepare("INSERT INTO Assenza(CFStudente,Data,Giustificato) VALUES("
-                    . "'" . $codF . "',"
-                    . "'" . $data . "',"
-                    . "'false')");
-            $this->preparedStatement->execute();
-            //Prendo il codice dell'assenza
-            $qryAssenza = "SELECT Assenza.ID "
+            $qryAssenza = "SELECT Count(*),ID,Orario"
                     . "FROM Assenza "
-                    . "WHERE CFStudente='" . $codF . "' AND Data='" . $data . "';";
-            $result = $this->conn->query($qryAssenza);
-            $idAssenza = $result->fetchColumn(0);
-            //Inserisco giornata
-            $this->preparedStatement = $this->conn->prepare("INSERT INTO tblOrario(Orario,IdAssenza) VALUES("
-                    . "'000000000000000000000000',"
-                    . "'" . $idAssenza . "')");
-            $this->preparedStatement->execute();
+                    . "WHERE CFStudente='" . $codF . "' AND Data='" . $data . "'";
+            $count = $this->conn->query($qryAssenza)->fetchColumn(0);
+            $idAssenza = $this->conn->query($qryAssenza)->fetchColumn(1);
+            $orario = $this->conn->query($qryAssenza)->fetchColumn(2);
+            if ($count == 0) {
+                $this->preparedStatement = $this->conn->prepare("INSERT INTO Assenza(CFStudente,Data,Orario,Giustificato) VALUES("
+                        . "'" . $codF . "',"
+                        . "'" . $data . "',"
+                        . "'111111111111111111111111',"
+                        . "'false')");
+                $this->preparedStatement->execute();
+            } else {
+                date_default_timezone_set("CET");
+                $time = date("H", time());
+                for ($i = $time; $i < 24; $i++) {
+                    $orario[$i] = "1";
+                }
+                $this->preparedStatement = $this->conn->prepare("UPDATE Assenza "
+                        . "SET Orario='" . $orario . "' "
+                        . "WHERE ID=" . $idAssenza);
+                $this->preparedStatement->execute();
+            }
             return true;
         } else {
             return false;

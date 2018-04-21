@@ -37,7 +37,7 @@ class qrCodeController extends Controller {
             $random = rand(1000, 10000);
 
 
-            $strQrCode = $idDoc . "-" . $scuola . "-" . $classe . "-" . $time . "-" . $random;
+            $strQrCode = $idDoc . "-" . $scuola . "-" . $classe . "-" . $data . "-" . $random;
             $this->database->insertQrCode($data, $random, $scuola, $classe, $idDoc);
 
             $app = $this->database->requestQrCode($username, $password);
@@ -56,8 +56,6 @@ class qrCodeController extends Controller {
     public function setPresenza(Request $request) {
         $username = $request->input('username');
         $password = $request->input('password');
-        $useDocente = $request->input('useDocente');
-        $passDocente = $request->input('passDocente');
         $scuola = $request->input('scuola');
         $classe = $request->input('classe');
         $cod = $request->input('codice');
