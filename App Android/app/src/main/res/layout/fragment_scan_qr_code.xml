@@ -20,7 +20,9 @@
         android:layout_gravity="center"
         android:layout_marginTop="25dp"
         android:text="Scan"
-        android:id="@+id/fragment_Get_qrCode_scan"/>
+        android:id="@+id/fragment_Get_qrCode_scan"
+        android:textStyle="bold"
+        android:theme="@style/AppTheme.Button"/>
 
 
 </LinearLayout>

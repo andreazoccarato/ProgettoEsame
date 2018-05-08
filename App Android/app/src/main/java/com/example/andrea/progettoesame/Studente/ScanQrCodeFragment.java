@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.andrea.progettoesame.ModificaProfiloFragment;
 import com.example.andrea.progettoesame.R;
 import com.google.zxing.Result;
 

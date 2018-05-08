@@ -1,6 +1,5 @@
 package com.example.andrea.progettoesame.Docente;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -15,7 +15,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.andrea.progettoesame.EventiAdapter;
 import com.example.andrea.progettoesame.MySingleton;
 import com.example.andrea.progettoesame.R;
 
@@ -57,12 +56,25 @@ public class ListaStudentiFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lista_studenti, container, false);
 
+        Button button = (Button) view.findViewById(R.id.lista_studenti_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("param1", "Gestione generale");
+                bundle.putString("param2", "" + "");
+                MenuAzioniFragment dialogFragment = new MenuAzioniFragment();
+                dialogFragment.setArguments(bundle);
+                dialogFragment.show(getFragmentManager(), "Gestione generale");
+            }
+        });
+
         TextView textView = (TextView) view.findViewById(R.id.lista_studenti_textView);
         textView.setText(sezioneClasse);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.lista_studenti_recyclerView);
 
-        final ListaStudentiAdapter adapter = new ListaStudentiAdapter(studenti);
+        final ListaStudentiAdapter adapter = new ListaStudentiAdapter(getContext(), studenti);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -81,13 +93,11 @@ public class ListaStudentiFragment extends Fragment {
                             JSONArray array = json.getJSONArray("Studenti");
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject studente = array.getJSONObject(i);
+                                String codF = studente.getString("CodiceFiscale");
                                 String nome = studente.getString("Nome");
-                                System.out.println("Nome: " + nome);
                                 String cognome = studente.getString("Cognome");
-                                System.out.println("Cognome: " + cognome);
                                 String dataNascita = studente.getString("DataNascita");
-                                System.out.println("data di nascita: " + dataNascita);
-                                studenti.add(new Studente(nome, cognome, dataNascita));
+                                studenti.add(new Studente(codF, nome, cognome, dataNascita));
                             }
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
@@ -111,11 +121,11 @@ public class ListaStudentiFragment extends Fragment {
                 return params;
             }
         };
-        //imposto un numero di tentativi in caso di com.android.volley.TimeoutError
         postRequest.setRetryPolicy(new DefaultRetryPolicy(1000, 10, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         MySingleton.getInstance(getContext()).addToRequestQueue(postRequest);
 
         return view;
     }
+
 
 }

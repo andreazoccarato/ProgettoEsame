@@ -1,10 +1,14 @@
 package com.example.andrea.progettoesame.Docente;
 
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.andrea.progettoesame.R;
 
@@ -17,8 +21,10 @@ import java.util.ArrayList;
 public class ListaStudentiAdapter extends RecyclerView.Adapter<ListaStudentiAdapter.ViewHolder> {
 
     private static ArrayList<Studente> studenti;
+    private Context context;
 
-    public ListaStudentiAdapter(ArrayList<Studente> studenti) {
+    public ListaStudentiAdapter(Context context, ArrayList<Studente> studenti) {
+        this.context = context;
         this.studenti = studenti;
     }
 
@@ -32,7 +38,7 @@ public class ListaStudentiAdapter extends RecyclerView.Adapter<ListaStudentiAdap
     @Override
     public void onBindViewHolder(ListaStudentiAdapter.ViewHolder holder, int position) {
         Studente stud = studenti.get(position);
-        holder.setItem(stud, (position+1));
+        holder.setItem(stud, (position + 1));
     }
 
     @Override
@@ -40,7 +46,7 @@ public class ListaStudentiAdapter extends RecyclerView.Adapter<ListaStudentiAdap
         return studenti.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView position;
         private TextView nomininativo;
         private TextView data_nascita;
@@ -50,13 +56,27 @@ public class ListaStudentiAdapter extends RecyclerView.Adapter<ListaStudentiAdap
             position = (TextView) itemView.findViewById(R.id.lista_studenti_pos);
             nomininativo = (TextView) itemView.findViewById(R.id.lista_studenti_nome);
             data_nascita = (TextView) itemView.findViewById(R.id.lista_studenti_data);
+            itemView.setOnClickListener(this);
         }
 
         public void setItem(Studente studente, int pos) {
-            this.position.setText(""+pos);
+            this.position.setText("" + pos);
             this.nomininativo.setText(studente.getCognome() + " " + studente.getNome());
             this.data_nascita.setText(studente.getDataNascita());
         }
 
+        @Override
+        public void onClick(View view) {
+            int position = getLayoutPosition(); // gets item position
+
+            FragmentManager manager = ((DocenteActivity) context).getSupportFragmentManager();
+            Bundle bundle = new Bundle();
+            bundle.putString("param1", "Gestione_studente");
+            bundle.putString("param2", "" + studenti.get(position).getCodF());
+            bundle.putString("param3", "" + studenti.get(position).getCognome() + " " + studenti.get(position).getNome());
+            MenuAzioniFragment dialogFragment = new MenuAzioniFragment();
+            dialogFragment.setArguments(bundle);
+            dialogFragment.show(manager, "Gestione studente");
+        }
     }
 }

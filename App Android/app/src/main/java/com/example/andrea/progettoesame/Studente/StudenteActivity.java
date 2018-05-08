@@ -1,6 +1,5 @@
 package com.example.andrea.progettoesame.Studente;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -16,24 +15,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.example.andrea.progettoesame.AgendaFragment;
 import com.example.andrea.progettoesame.MainFragment;
-import com.example.andrea.progettoesame.ModificaProfiloFragment;
-import com.example.andrea.progettoesame.MySingleton;
 import com.example.andrea.progettoesame.ProfiloFragment;
 import com.example.andrea.progettoesame.R;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class StudenteActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,

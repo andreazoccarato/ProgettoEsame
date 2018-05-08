@@ -1,6 +1,5 @@
 package com.example.andrea.progettoesame.Docente;
 
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -10,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -19,16 +17,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.andrea.progettoesame.MySingleton;
 import com.example.andrea.progettoesame.R;
-import com.example.andrea.progettoesame.Studente.StudenteActivity;
-import com.example.andrea.progettoesame.Studente.VotiArrayAdapter;
-import com.example.andrea.progettoesame.Studente.Voto;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

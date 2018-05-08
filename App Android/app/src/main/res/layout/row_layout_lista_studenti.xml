@@ -31,9 +31,9 @@
                 android:id="@+id/lista_studenti_nome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
                 android:text="nome"
                 android:textSize="25dp"
-                android:layout_marginLeft="100dp"
                 android:textStyle="bold" />
 
             <TextView

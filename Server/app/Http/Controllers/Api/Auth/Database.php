@@ -346,7 +346,7 @@ class Database {
      */
 
     function getStudentiByClasse($codClasse) {
-        $qryStudenti = "SELECT Nome,Cognome,DataNascita "
+        $qryStudenti = "SELECT CodiceFiscale,Nome,Cognome,DataNascita "
                 . "FROM Studente "
                 . "WHERE IdClasse=" . $codClasse . " "
                 . "ORDER BY Cognome,Nome";

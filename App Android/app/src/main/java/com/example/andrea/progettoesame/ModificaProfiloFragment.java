@@ -1,16 +1,11 @@
 package com.example.andrea.progettoesame;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.ContentFrameLayout;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,8 +14,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.andrea.progettoesame.MySingleton;
-import com.example.andrea.progettoesame.R;
 import com.example.andrea.progettoesame.Studente.StudenteActivity;
 
 import org.json.JSONException;

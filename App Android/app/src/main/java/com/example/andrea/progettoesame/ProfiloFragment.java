@@ -12,7 +12,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.andrea.progettoesame.Docente.DocenteActivity;
 import com.example.andrea.progettoesame.Studente.StudenteActivity;
 
 import org.json.JSONException;

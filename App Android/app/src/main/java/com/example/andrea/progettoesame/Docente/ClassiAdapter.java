@@ -66,9 +66,9 @@ public class ClassiAdapter extends ArrayAdapter<Classe> {
             // Log steTag()
             Log.d(TAG, "getTag() for object in position: " + position);
         }
-        if((position % 2) == 0){
+        if ((position % 2) == 0) {
             viewHolder.intermezzo.setBackgroundColor(Color.GREEN);
-        }else{
+        } else {
             viewHolder.intermezzo.setBackgroundColor(Color.CYAN);
         }
         viewHolder.clsez.setText(c.getClsez());
