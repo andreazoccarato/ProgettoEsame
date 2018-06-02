@@ -8,7 +8,7 @@
             android:title="qrcode" />
         <item
             android:id="@+id/nav_classi"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_aula"
             android:title="@string/Mie_classi" />
         <item
             android:id="@+id/nav_profilo"

@@ -14,6 +14,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.andrea.progettoesame.Docente.DocenteActivity;
 import com.example.andrea.progettoesame.Studente.StudenteActivity;
 
 import org.json.JSONException;
@@ -23,6 +24,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ModificaProfiloFragment extends DialogFragment {
+
+    public static final String ARG_PARAM_TYPE = "tipologia";
+
+    private String tipologia;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            tipologia = getArguments().getString(ARG_PARAM_TYPE);
+        }
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -48,44 +61,14 @@ public class ModificaProfiloFragment extends DialogFragment {
                             Toast.makeText(getContext(), "Le password sono diverse", Toast.LENGTH_SHORT).show();
                             dismiss();
                         } else {
-                            String url = "http://192.168.1.104:8000/api/setProfilo";
-                            StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                                    new Response.Listener<String>() {
-                                        @Override
-                                        public void onResponse(String response) {
-                                            System.out.println("------------RISPOSTA------------");
-                                            System.out.println("----------------------------------------" + response);
-                                            JSONObject json = null;
-                                            String risultato = "";
-                                            try {
-                                                json = new JSONObject(response);
-                                                risultato = json.getString("RisultatoModifica");
-                                                Toast.makeText(getContext(), risultato, Toast.LENGTH_SHORT).show();
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    },
-                                    new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            error.printStackTrace();
-                                        }
-                                    }
-                            ) {
-                                @Override
-                                protected Map<String, String> getParams() {
-                                    Map<String, String> params = new HashMap<String, String>();
-                                    Pair p = ((StudenteActivity) getActivity()).getData();
-                                    params.put("username", (String) p.first);
-                                    params.put("password", (String) p.second);
-                                    params.put("newPassword", newPassword);
-                                    params.put("newUsername", newUsername);
-                                    return params;
-                                }
-                            };
-                            postRequest.setRetryPolicy(new DefaultRetryPolicy(1000, 10, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                            MySingleton.getInstance(getContext()).addToRequestQueue(postRequest);
+                            Pair pair;
+                            if (tipologia.equals("studente")) {
+                                pair = ((StudenteActivity) getActivity()).getData();
+                            } else {
+                                pair = ((DocenteActivity) getActivity()).getData();
+                            }
+                            InterazioneServer interazioneServer = new InterazioneServer(getContext(), (String) pair.first, (String) pair.second);
+                            interazioneServer.modificaProfilo(newUsername, newPassword);
                         }
                     }
                 }

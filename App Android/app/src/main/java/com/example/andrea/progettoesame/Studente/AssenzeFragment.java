@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.andrea.progettoesame.Evento;
+import com.example.andrea.progettoesame.InterazioneServer;
 import com.example.andrea.progettoesame.MySingleton;
 import com.example.andrea.progettoesame.R;
 
@@ -50,7 +51,7 @@ public class AssenzeFragment extends Fragment {
     }
 
     private void getEventi() {
-        String url = "http://192.168.1.104:8000/api/getAssenze";
+        String url = "http://" + InterazioneServer.URL_SERVER + "/api/getAssenze";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -96,7 +97,7 @@ public class AssenzeFragment extends Fragment {
                                     Assenza assenza_header = new Assenza("", "Da giustificare", true, "", AssenzaAdapter.VIEW_TYPE_HEADER);
                                     assenze.add(assenza_header);
                                     for (int i = 0; i < arrayNonGiustificate.length(); i++) {
-                                        JSONObject jsonAssenzaNonGiustificata = arrayGiustificate.getJSONObject(i);
+                                        JSONObject jsonAssenzaNonGiustificata = arrayNonGiustificate.getJSONObject(i);
                                         String data = jsonAssenzaNonGiustificata.getString("Data");
                                         String orario = jsonAssenzaNonGiustificata.getString("Orario");
                                         String tipologia = getTipologiaGiustifica(orario);
@@ -128,7 +129,7 @@ public class AssenzeFragment extends Fragment {
                 return params;
             }
         };
-        //imposto un numero di tentativi in caso di com.android.volley.TimeoutError
+
         postRequest.setRetryPolicy(new DefaultRetryPolicy(1000, 10, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         MySingleton.getInstance(getContext()).addToRequestQueue(postRequest);
     }

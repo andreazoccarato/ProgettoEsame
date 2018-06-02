@@ -15,6 +15,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.andrea.progettoesame.InterazioneServer;
 import com.example.andrea.progettoesame.MySingleton;
 import com.example.andrea.progettoesame.R;
 
@@ -47,7 +48,7 @@ public class ClassiFragment extends ListFragment implements AdapterView.OnItemCl
 
         classi = new ArrayList<>();
 
-        String url = "http://192.168.1.104:8000/api/getClassi";
+        String url = "http://" + InterazioneServer.URL_SERVER + "/api/getClassi";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -63,10 +64,13 @@ public class ClassiFragment extends ListFragment implements AdapterView.OnItemCl
                                 String sezione = classe.getString("Sezione");
                                 String indirizzo = classe.getString("Indirizzo");
                                 String nome = classe.getString("Nome");
-                                classi.add(new Classe(idClasse,sezione, indirizzo, nome));
+                                classi.add(new Classe(idClasse, sezione, indirizzo, nome));
                             }
-                            ClassiAdapter adapter = new ClassiAdapter(getActivity(), classi);
-                            setListAdapter(adapter);
+                            if (json != null) {
+                                ClassiAdapter adapter = new ClassiAdapter(getActivity(), classi);
+                                setListAdapter(adapter);
+                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -100,8 +104,8 @@ public class ClassiFragment extends ListFragment implements AdapterView.OnItemCl
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Bundle bundle = new Bundle();
-        bundle.putString("param1",classi.get(position).getClsez());
-        bundle.putString("param2",""+classi.get(position).getCodClasse());
+        bundle.putString("param1", classi.get(position).getClsez());
+        bundle.putString("param2", "" + classi.get(position).getCodClasse());
         ListaStudentiFragment listaStudentiFragment = new ListaStudentiFragment();
         listaStudentiFragment.setArguments(bundle);
         FragmentManager fragmentManager = getFragmentManager();

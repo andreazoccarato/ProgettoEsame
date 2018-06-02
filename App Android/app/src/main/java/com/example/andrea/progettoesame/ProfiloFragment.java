@@ -7,20 +7,36 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.andrea.progettoesame.Docente.DocenteActivity;
 import com.example.andrea.progettoesame.Studente.StudenteActivity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class ProfiloFragment extends Fragment {
+
+    public static final String ARG_PARAM_TYPE = "tipologia";
+
+    private String tipologia;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            tipologia = getArguments().getString(ARG_PARAM_TYPE);
+        }
+    }
 
     public ProfiloFragment() {
     }
@@ -34,7 +50,7 @@ public class ProfiloFragment extends Fragment {
         final TextView cognome = (TextView) view.findViewById(R.id.profilo_cognome);
         final TextView dataNascita = (TextView) view.findViewById(R.id.profilo_dataNascita);
 
-        String url = "http://192.168.1.104:8000/api/getProfilo";
+        String url = "http://" + InterazioneServer.URL_SERVER + "/api/getProfilo";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -42,18 +58,16 @@ public class ProfiloFragment extends Fragment {
                         System.out.println("------------RISPOSTA------------");
                         System.out.println("----------------------------------------" + response);
                         JSONObject json = null;
-                        String info = "";
                         try {
                             json = new JSONObject(response);
-                            info = json.getString("Info");
-                            info = info.replaceAll("/", "");
-                            info = info.replaceAll("\"", "");
-                            info = info.replaceAll(":", ",");
-                            info = info.replaceAll("\\}]", " ");
-                            String app[] = info.split(",");
-                            nome.setText(app[1]);
-                            cognome.setText(app[3]);
-                            dataNascita.setText(app[5]);
+                            JSONArray array = json.getJSONArray("Info");
+                            JSONObject info = array.getJSONObject(0);
+                            System.out.println(info.getString("Nome"));
+                            System.out.println(info.getString("Cognome"));
+                            System.out.println(info.getString("DataNascita"));
+                            nome.setText(info.getString("Nome"));
+                            cognome.setText(info.getString("Cognome"));
+                            dataNascita.setText(info.getString("DataNascita"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -70,9 +84,14 @@ public class ProfiloFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                Pair p = ((StudenteActivity) getActivity()).getData();
-                params.put("username", (String) p.first);
-                params.put("password", (String) p.second);
+                Pair pair;
+                if (tipologia.equals("studente")) {
+                    pair = ((StudenteActivity) getActivity()).getData();
+                } else {
+                    pair = ((DocenteActivity) getActivity()).getData();
+                }
+                params.put("username", (String) pair.first);
+                params.put("password", (String) pair.second);
                 return params;
             }
         };
@@ -85,6 +104,9 @@ public class ProfiloFragment extends Fragment {
         textView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 ModificaProfiloFragment dialogFragment = new ModificaProfiloFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("tipologia", tipologia);
+                dialogFragment.setArguments(bundle);
                 dialogFragment.show(getFragmentManager(), "Modifica Profilo");
             }
         });

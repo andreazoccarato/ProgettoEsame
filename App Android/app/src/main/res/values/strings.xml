@@ -18,17 +18,63 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
-
     <string name="welcome">Welcome</string>
     <string name="welcome_subtitles">Choose an options</string>
-
     <string name="getQrCode_Title">Press button to \n retrieve QrCode</string>
     <string name="title_activity_studente">StudenteActivity</string>
     <string name="agenda">Agenda</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Mie_classi">Mie Classi</string>
 
+    <string-array name="voti_array">
+        <item>3</item>
+        <item>3+</item>
+        <item>3 ½</item>
+        <item>3/4</item>
+        <item>4-</item>
+        <item>4</item>
+        <item>4+</item>
+        <item>4 ½</item>
+        <item>4/5</item>
+        <item>5-</item>
+        <item>5</item>
+        <item>5+</item>
+        <item>5 ½</item>
+        <item>5/6</item>
+        <item>6-</item>
+        <item>6</item>
+        <item>6+</item>
+        <item>6 ½</item>
+        <item>6/7</item>
+        <item>7-</item>
+        <item>7</item>
+        <item>7+</item>
+        <item>7 ½</item>
+        <item>7/8</item>
+        <item>8-</item>
+        <item>8</item>
+        <item>8+</item>
+        <item>8 ½</item>
+        <item>8/9</item>
+        <item>9-</item>
+        <item>9</item>
+        <item>9+</item>
+        <item>9 ½</item>
+        <item>9/10</item>
+        <item>10-</item>
+        <item>10</item>
+    </string-array>
+
+    <string-array name="ore_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+    </string-array>
 
 </resources>

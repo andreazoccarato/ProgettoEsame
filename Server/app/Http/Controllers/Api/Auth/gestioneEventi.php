@@ -22,7 +22,7 @@ class gestioneEventi extends Controller {
 
         $result = $this->database->getEventsByCred($username, $password, $data);
         $this->database->disconnect();
-        
+
         $risposta = Array("Eventi" => $result);
         echo json_encode($risposta);
     }
@@ -31,11 +31,28 @@ class gestioneEventi extends Controller {
         $this->database->connect();
 
         $classe = $request->input('idClasse');
-        
+
         $result = $this->database->getEventsByClass($classe);
         $this->database->disconnect();
-        
+
         $risposta = Array("Eventi" => $result);
+        echo json_encode($risposta);
+    }
+
+    public function aggiungiEvento(Request $request) {
+        $this->database->connect();
+
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $data = $request->input('data');
+        $materia = $request->input('materia');
+        $descrizione = $request->input('descrizione');
+        $idClasse = $request->input('idClasse');
+
+        $result = $this->database->insertCompito($data, $materia, $descrizione, $username, $password, $idClasse);
+
+        $this->database->disconnect();
+        $risposta = Array("Risultato" => $result);
         echo json_encode($risposta);
     }
 

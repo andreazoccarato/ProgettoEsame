@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
@@ -13,9 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.andrea.progettoesame.AgendaFragment;
+import com.example.andrea.progettoesame.Docente.AggiungiVotoFragment;
 import com.example.andrea.progettoesame.MainFragment;
 import com.example.andrea.progettoesame.ProfiloFragment;
 import com.example.andrea.progettoesame.R;
@@ -82,6 +85,9 @@ public class StudenteActivity extends AppCompatActivity
         Fragment fragment = null;
         if (id == R.id.action_settings) {
             fragment = new ProfiloFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("tipologia", "studente");
+            fragment.setArguments(bundle);
         }
 
         if (fragment != null) {
@@ -108,6 +114,9 @@ public class StudenteActivity extends AppCompatActivity
             fragment = new AgendaFragment();
         } else if (id == R.id.nav_profilo) {
             fragment = new ProfiloFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("tipologia", "studente");
+            fragment.setArguments(bundle);
         }
 
         if (fragment != null) {
@@ -134,5 +143,6 @@ public class StudenteActivity extends AppCompatActivity
     public void onFragmentInteraction(Uri uri) {
 
     }
+
 
 }

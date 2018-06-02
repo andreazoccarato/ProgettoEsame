@@ -220,6 +220,45 @@ class Database {
         }
     }
 
+    function getClasseByClsezAndScuola($clsez, $scuola) {
+        $qry = "SELECT IdClasse "
+                . "FROM Classe "
+                . "WHERE CodiceScuola='" . $scuola . "' AND Sezione='" . $clsez . "'";
+        $resultStudente = $this->conn->query($qry);
+        $result = $resultStudente->fetchColumn(0);
+        if ($result != "") {
+            return $result;
+        }
+    }
+
+    /*
+     * Metodo che restituisce l'identificativo della classe a partire dal codiceFiscale
+     */
+
+    function getClasseByCF($codF) {
+        $qryStudente = "SELECT Studente.IdClasse "
+                . "FROM Studente  "
+                . "WHERE CodiceFiscale='" . $codF . "'";
+        $resultStudente = $this->conn->query($qryStudente);
+        $result = $resultStudente->fetchColumn(0);
+        if ($result != "") {
+            return $result;
+        }
+    }
+
+    /*
+     * Metodo che restituisce l'identificativo della classe a partire dalla sezione e dalla scuola
+     */
+
+    function getClasseByClsez($clSez, $scuola) {
+        $qryClasse = "SELECT IdClasse FROM Classe WHERE Sezione='" . $clSez . "' AND CodiceScuola='" . $scuola . "'";
+        $result = $this->conn->query($qryClasse);
+        $idClasse = $result->fetchColumn(0);
+        if ($idClasse != "") {
+            return $idClasse;
+        }
+    }
+
     /*
      * Metodo che restituisce l'identificativo della scuola
      */
@@ -293,7 +332,7 @@ class Database {
     }
 
     /*
-     * Metodo che mi prende le assenze dello studente a partire dalle sue credenziali
+     * Metodo che prende le assenze dello studente a partire dalle sue credenziali
      */
 
     function getAssenze($username, $password) {
@@ -308,6 +347,17 @@ class Database {
         $arrayAssenzeGiustificate = $this->conn->query($qryAssenzeGiustificate)->fetchAll(PDO::FETCH_ASSOC);
         $ris = array(Array("Giustificate" => $arrayAssenzeGiustificate), Array("NonGiustificate" => $arrayAssenzeNonGiustificate));
         return $ris;
+    }
+
+    /*
+     * Metodo che prende le assenze non giustificate dello studente a partire dalle sue credenziali
+     */
+
+    function getAssenzeNonGiustificate($codF) {
+        $qryAssenzeNonGiustificate = "SELECT Assenza.* "
+                . "FROM Assenza "
+                . "WHERE CFStudente='" . $codF . "' AND Giustificato='false'";
+        return $this->conn->query($qryAssenzeNonGiustificate)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /*
@@ -354,10 +404,58 @@ class Database {
     }
 
     /*
+     * Metodo che restituisce lo username e la password dello studente a partire dal suo codice fiscale
+     */
+
+    function getUsernamePasswordStud($codF) {
+        $qry = "SELECT Username,Password FROM Credenziali INNER JOIN Studente ON Credenziali.ID=Studente.IdCredenziali WHERE CodiceFiscale='" . $codF . "'";
+        return $arrayStudenti = $this->conn->query($qry)->fetchAll();
+    }
+
+    function giustificaPresente($idAssenza) {
+        $qry = "SELECT IdGiustifica FROM Giustifica WHERE IdAssenza='" . $idAssenza . "'";
+        $resultQry = $this->conn->query($qry);
+        $count = $resultQry->fetchColumn(0);
+        if ($count == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /*
      * METODI DI INSERIMENTO
      * -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
      * -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
      */
+
+    /*
+     * Metodo che inserisce un voto allo studente
+     */
+
+    function addVoto($voto, $materia, $descrizione, $data, $ora, $cfStud, $username, $password) {
+        $codF = $this->getIdDocente($username, $password);
+        $this->preparedStatement = $this->conn->prepare("INSERT INTO Valutazione(Voto,Data,Ora,Materia,Descrizione,CFStudente,CFDocente) VALUES("
+                . "'" . $voto . "',"
+                . "'" . $data . "',"
+                . "'" . $ora . "',"
+                . "'" . $materia . "',"
+                . "'" . $descrizione . "',"
+                . "'" . $cfStud . "',"
+                . "'" . $codF . "')");
+        $this->preparedStatement->execute();
+
+        $qryVoto = "SELECT ID "
+                . "FROM Valutazione "
+                . "WHERE Voto='" . $voto . "' AND Materia='" . $materia . "' AND Data='" . $data . "' AND Ora='" . $ora . "' AND Descrizione='" . $descrizione . "' AND CFStudente='" . $cfStud . "' AND CFDocente='" . $codF . "'";
+        $resultQry = $this->conn->query($qryVoto);
+        $id = $resultQry->fetchColumn(0);
+        if ($id != "") {
+            return "Voto inserito con successo";
+        } else {
+            return "Voto non inserito";
+        }
+    }
 
     /*
      * Metodo che inserisce lo studente specificato all'interno del database
@@ -410,43 +508,23 @@ class Database {
     }
 
     /*
-     * Metodo che inserisce la lezione specificata all'interno del database
+     * Metodo che inserisce un compito
      */
 
-    function insertLezione($ID, $Data, $Ora, $Materia, $Descrizione, $CFDocente) {
-        $this->preparedStatement = $this->conn->prepare("INSERT INTO Studente VALUES('" . $ID . "',"
-                . "'" . $Data . "',"
-                . "'" . $Ora . "',"
-                . "'" . $Materia . "' "
-                . "'" . $Descrizione . "' "
-                . "'" . $CFDocente . "')");
+    function insertCompito($data, $materia, $descrizione, $username, $password, $idClasse) {
+        $codF = $this->getIdDocente($username, $password);
+        $scuola = $this->getScuola($username, $password);
+        $this->preparedStatement = $this->conn->prepare("INSERT INTO Agenda(Data,Materia,Descrizione,CFDocente,IdClasse) VALUES('" . $data . "','"
+                . $materia . "','" . $descrizione . "','" . $codF . "'," . $idClasse . ")");
         $this->preparedStatement->execute();
-    }
-
-    /*
-     * Metodo che inserisce la valutazione specificata all'interno del database
-     */
-
-    function insertValutazione($ID, $Voto, $Data, $Ora, $CFStudente, $CFDocente) {
-        $this->preparedStatement = $this->conn->prepare("INSERT INTO Studente VALUES('" . $ID . "',"
-                . "'" . $Voto . "',"
-                . "'" . $Data . "',"
-                . "'" . $Ora . "',"
-                . "'" . $CFStudente . "',"
-                . "'" . $CFDocente . "')");
-        $this->preparedStatement->execute();
-    }
-
-    /*
-     * Metodo che inserisce la giustifica di assenza all'interno del database
-     */
-
-    function insertGiustifica($IdGiustifica, $Data, $IdAssenza, $CFDocente) {
-        $this->preparedStatement = $this->conn->prepare("INSERT INTO Studente VALUES('" . $IdGiustifica . "' "
-                . "'" . $Data . "',"
-                . "'" . $IdAssenza . "',"
-                . "'" . $CFDocente . "')");
-        $this->preparedStatement->execute();
+        $qry = "SELECT Agenda.ID FROM Agenda WHERE Data='" . $data . "' AND Materia='" . $materia . "' AND Descrizione='" . $descrizione . "' AND CFDocente='" . $codF . "' AND IdClasse='" . $idClasse . "'";
+        $resultQry = $this->conn->query($qry);
+        $count = $resultQry->fetchColumn(0);
+        if ($count == 0) {
+            return "Compito non inserito";
+        } else {
+            return "Compito Inserito";
+        }
     }
 
     /*
@@ -470,18 +548,14 @@ class Database {
     function insertPresenza($data, $username, $password) {
         if ($this->studenteGiàAssente($username, $password, $data)) {
             $codF = $this->getIdStudente($username, $password);
-            $qryAssenza = "SELECT Orario,ID "
-                    . "FROM Assenza "
-                    . "WHERE CFStudente='" . $codF . "' AND Data='" . $data . "'";
-            $query = $this->conn->query($qryAssenza);
-            $assenza = $query->fetchColumn(0);
-            $idAssenza = $query->fetchColumn(1);
+            $qryAssenza = "SELECT Orario,ID FROM Assenza WHERE CFStudente='" . $codF . "' AND Data='" . $data . "'";
+            $assenza = $this->conn->query($qryAssenza)->fetchColumn(0);
+            $idAssenza = $this->conn->query($qryAssenza)->fetchColumn(1);
             date_default_timezone_set("CET");
             $time = date("H", time());
             for ($i = $time; $i < 24; $i++) {
                 $assenza[$i] = "0";
             }
-            echo $assenza;
             $this->preparedStatement = $this->conn->prepare("UPDATE Assenza "
                     . "SET Orario='" . $assenza . "' "
                     . "WHERE ID=" . $idAssenza);
@@ -499,9 +573,7 @@ class Database {
     function insertAssenza($data, $username, $password) {
         $codF = $this->getIdStudente($username, $password);
         if (!$this->studenteGiàAssente($username, $password, $data)) {
-            $qryAssenza = "SELECT Count(*),ID,Orario"
-                    . "FROM Assenza "
-                    . "WHERE CFStudente='" . $codF . "' AND Data='" . $data . "'";
+            $qryAssenza = "SELECT Count(*),ID,Orario FROM Assenza WHERE CFStudente='" . $codF . "' AND Data='" . $data . "'";
             $count = $this->conn->query($qryAssenza)->fetchColumn(0);
             $idAssenza = $this->conn->query($qryAssenza)->fetchColumn(1);
             $orario = $this->conn->query($qryAssenza)->fetchColumn(2);
@@ -518,9 +590,7 @@ class Database {
                 for ($i = $time; $i < 24; $i++) {
                     $orario[$i] = "1";
                 }
-                $this->preparedStatement = $this->conn->prepare("UPDATE Assenza "
-                        . "SET Orario='" . $orario . "' "
-                        . "WHERE ID=" . $idAssenza);
+                $this->preparedStatement = $this->conn->prepare("UPDATE Assenza SET Orario='" . $orario . "' WHERE ID=" . $idAssenza);
                 $this->preparedStatement->execute();
             }
             return true;
@@ -528,6 +598,39 @@ class Database {
             return false;
         }
     }
+
+    /*
+     * Metodo che giustifica un'assenza
+     */
+
+    function giustifica($idAssenza, $descrizione, $data, $tipologia, $username, $password) {
+        if (!$this->giustificaPresente($idAssenza)) {
+            $codF = $this->getIdDocente($username, $password);
+            $sql = "UPDATE Assenza SET Giustificato='true' WHERE ID=" . $idAssenza;
+            $this->preparedStatement = $this->conn->prepare($sql);
+            $this->preparedStatement->execute();
+            $sqlInserisciGiustifica = "INSERT INTO Giustifica(Data,Descrizione,TipologiaGiustifica,IdAssenza,CFDocente) VALUES ('" . $data . "',"
+                    . "'" . $descrizione . "',"
+                    . "'" . $tipologia . "',"
+                    . "'" . $idAssenza . "',"
+                    . "'" . $codF . "')";
+            $this->preparedStatement = $this->conn->prepare($sqlInserisciGiustifica);
+            $this->preparedStatement->execute();
+            if (!$this->giustificaPresente($idAssenza)) {
+                return "Giustifica non effettuata";
+            } else {
+                return "Giustifica effettuata";
+            }
+        } else {
+            return "Assenza gia giustificata";
+        }
+    }
+
+    /*
+     * Metodo che effettua la firma
+     */
+
+
 
     /*
      * METODI DI MODIFICA
@@ -546,6 +649,172 @@ class Database {
         $result = $this->conn->query($qry);
         $app = $result->fetchColumn(0);
         return $app != "";
+    }
+
+    /*
+     * METODI DA PROVARE
+     * -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     * -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+     */
+
+    /*
+     * Metodo che inserisce la firma
+     */
+
+    function insertFirma($data, $username, $password, $nOre) {
+        $codF = $this->getIdDocente($username, $password);
+        $ora = date("H", time());
+        if ($this->lezioneGiaPresente($data, $username, $password, $ora)) {
+            $idLezione = $this->getIdLezione($codF, $data, $ora);
+
+            if ($this->firmaGiaPresente($data, $codF, $idLezione)) {
+                return "firma gia inserita";
+            } else {
+                $this->preparedStatement = $this->conn->prepare("INSERT INTO Firma (Data,CFDocente,IdLezione,nOre) VALUES('" . $data . "','"
+                        . $codF . "',"
+                        . $idLezione . ","
+                        . $nOre . ")");
+                $this->preparedStatement->execute();
+                if ($this->firmaGiaPresente($data, $codF, $idLezione)) {
+                    return "firma inserita";
+                } else {
+                    return "firma non inserita";
+                }
+            }
+        } else {
+            return "lezione gia presente";
+        }
+    }
+
+    /*
+     * Metodo che inserisce la lezione specificata all'interno del database
+     */
+
+    function insertLezione($data, $materia, $descrizione, $username, $password, $idClasse) {
+        $codF = $this->getIdDocente($username, $password);
+        date_default_timezone_set("CET");
+        $ora = date("H", time());
+        if ($this->lezioneGiaPresente($data, $username, $password, $ora)) {
+            return false;
+        } else {
+            $this->preparedStatement = $this->conn->prepare("INSERT INTO Lezione (Data,Ora,Materia,Descrizione,CFDocente,IdClasse) VALUES('" . $data . "',"
+                    . "'" . $ora . "',"
+                    . "'" . $materia . "', "
+                    . "'" . $descrizione . "', "
+                    . "'" . $codF . "',"
+                    . $idClasse . ")");
+            $this->preparedStatement->execute();
+            if ($this->lezioneGiaPresente($data, $username, $password, $ora)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @param type $username
+     * @param type $password
+     * @param type $ora
+     * @return boolean
+     * 
+     * Metodo che controlla se esiste gia la lezione
+     * 
+     */
+    function lezioneGiaPresente($data, $username, $password, $ora) {
+        $codF = $this->getIdDocente($username, $password);
+        $qryAssente = "SELECT Count(*) "
+                . "FROM Lezione WHERE Data='" . $data . "' AND CFDocente='" . $codF . "' AND Ora=" . $ora . " "
+                . "GROUP BY ID";
+        $resultQry = $this->conn->query($qryAssente);
+        $count = $resultQry->fetchColumn(0);
+        if ($count == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @param type $codF
+     * @param type $idLezione
+     * @return boolean
+     * 
+     * Metodo che controlla se c'è gia la firma
+     * 
+     */
+    function firmaGiaPresente($data, $codF, $idLezione) {
+        $qryAssente = "SELECT Count(*) FROM Firma "
+                . "WHERE Data='" . $data . "' AND CFDocente='" . $codF . "' AND IdLezione=" . $idLezione . " "
+                . "GROUP BY CodiceFirma";
+        $resultQry = $this->conn->query($qryAssente);
+        $count = $resultQry->fetchColumn(0);
+        if ($count == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /*
+     * Metodo che preleva l'id della lezione 
+     */
+
+    function getIdLezione($codF, $data, $ora) {
+        $qryInfoStud = "SELECT ID "
+                . "FROM Lezione "
+                . "WHERE CFDocente='" . $codF . "' AND Data='" . $data . "' AND Ora=" . $ora . "";
+        $idLezione = $this->conn->query($qryInfoStud)->fetchColumn(0);
+        return $idLezione;
+    }
+
+    /**
+     * 
+     * @param type $username
+     * @param type $password
+     * 
+     * @return boolean
+     * 
+     * cancella la firma
+     * 
+     */
+    function deleteFirma($data, $username, $password) {
+        $codF = $this->getIdDocente($username, $password);
+        date_default_timezone_set("CET");
+        $ora = date("H", time());
+        $idLezione = $this->getIdLezione($codF, $data, $ora);
+        echo $idLezione;
+        $qryInfoStud = "DELETE FROM Firma WHERE Data='" . $data . "' AND CFDocente='" . $codF . "' AND IdLezione=" . $idLezione . "";
+        $this->preparedStatement = $this->conn->prepare($qryInfoStud);
+        $this->preparedStatement->execute();
+    }
+
+    /**
+     * 
+     * @param type $username
+     * @param type $password
+     * @param type $data
+     * @return string
+     * 
+     * cancella la Lezione
+     * 
+     */
+    function deleteLezione($username, $password, $data) {
+        $codF = $this->getIdDocente($username, $password);
+        date_default_timezone_set("CET");
+        $ora = date("H", time());
+        $qryInfoStud = "DELETE FROM Lezione WHERE CFDocente='" . $codF . "' AND Data='" . $data . "' AND Ora=" . $ora . "";
+        $this->preparedStatement = $this->conn->prepare($qryInfoStud);
+        $this->preparedStatement->execute();
+        if (!$this->lezioneGiaPresente($data, $username, $password, $ora)) {
+            return "firma cancellata";
+        } else {
+            return "firma non cancellata";
+        }
     }
 
 }

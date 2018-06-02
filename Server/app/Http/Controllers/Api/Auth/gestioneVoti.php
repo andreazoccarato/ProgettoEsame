@@ -30,4 +30,23 @@ class gestioneVoti extends Controller {
         echo json_encode($risposta);
     }
 
+    public function addVoto(Request $request) {
+        $this->database->connect();
+
+        $username = $request->input('username');
+        $password = $request->input('password');
+        $voto = $request->input('voto');
+        $materia = $request->input('materia');
+        $descrizione = $request->input('descrizione');
+        $cfStud = $request->input('cfStud');
+        $data = date("j/m/Y", time());
+        $ora = date("H", time());
+
+        $result = $this->database->addVoto($voto, $materia, $descrizione, $data, $ora, $cfStud, $username, $password);
+
+        $risposta = Array("RisultatoVoto" => $result);
+        $this->database->disconnect();
+        echo json_encode($risposta);
+    }
+
 }

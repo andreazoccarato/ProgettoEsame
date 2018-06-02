@@ -5,33 +5,41 @@
     android:orientation="vertical">
 
     <Button
+        android:id="@+id/azioni_studente_voto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:onClick="onClickAzione"
         android:text="Aggiungi voto"
         android:textStyle="bold"
         android:theme="@style/AppTheme.Button" />
 
     <Button
+        android:id="@+id/azioni_studente_giustifica"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:onClick="onClickAzione"
         android:text="Giustifica"
         android:textStyle="bold"
         android:theme="@style/AppTheme.Button" />
 
     <Button
+        android:id="@+id/azioni_studente_presenza"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:onClick="onClickAzione"
         android:text="Inserisci presenza"
         android:textStyle="bold"
         android:theme="@style/AppTheme.Button" />
 
     <Button
+        android:id="@+id/azioni_studente_assenza"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:onClick="onClickAzione"
         android:text="Inserisci assenza"
         android:textStyle="bold"
         android:theme="@style/AppTheme.Button" />

@@ -38,9 +38,6 @@ class LoginController extends Controller {
     private function risposta($ruolo) {
         $risposta = Array("Ruolo" => $ruolo);
         echo json_encode($risposta);
-        return response()->json([
-                    'Ruolo' => '' . $ruolo . ''
-        ]);
     }
 
 }

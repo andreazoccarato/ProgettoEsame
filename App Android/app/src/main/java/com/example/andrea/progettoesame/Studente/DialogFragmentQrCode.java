@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -13,6 +16,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.andrea.progettoesame.InterazioneServer;
 import com.example.andrea.progettoesame.MySingleton;
 import com.example.andrea.progettoesame.R;
 
@@ -27,9 +31,17 @@ public class DialogFragmentQrCode extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        String titleText = "Check";
+        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(getActivity().getResources().getColor(R.color.colorAccent));
+        SpannableStringBuilder ssBuilder = new SpannableStringBuilder(titleText);
+        ssBuilder.setSpan(
+                foregroundColorSpan,
+                0,
+                titleText.length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
-
-        alertDialog.setTitle("Check");
+        alertDialog.setTitle(ssBuilder);
         alertDialog.setView(R.layout.fragment_dialog_fragment_qr_code);
         alertDialog.setPositiveButton("Presenza",
                 new DialogInterface.OnClickListener() {
@@ -51,13 +63,11 @@ public class DialogFragmentQrCode extends DialogFragment {
     }
 
     private void setPresenza(final String type) {
-        String url = "http://192.168.1.104:8000/api/setPresenza";
+        String url = "http://" + InterazioneServer.URL_SERVER + "/api/setPresenza";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        System.out.println("------------RISPOSTA------------");
-                        System.out.println("----------------------------------------" + response);
                         JSONObject json = null;
                         String risultato = "";
                         try {

@@ -1,6 +1,8 @@
 package com.example.andrea.progettoesame;
 
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.andrea.progettoesame.Docente.AggiungiVotoFragment;
 import com.example.andrea.progettoesame.Docente.DocenteActivity;
 import com.example.andrea.progettoesame.Studente.StudenteActivity;
 
@@ -46,60 +49,9 @@ public class MainActivity extends AppCompatActivity {
             userName.setError("Campo Necessario");
             passWord.setError("Campo Necessario");
         }
-
-        loginToServer();
+        InterazioneServer interazioneServer = new InterazioneServer(this, username, password);
+        interazioneServer.loginToServer();
     }
-
-    private void loginToServer() {
-        String url = "http://192.168.1.104:8000/api/login";
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        System.out.println("------------RISPOSTA------------");
-                        System.out.println("----------------------------------------" + response);
-                        JSONObject json = null;
-                        String ruolo = "";
-                        try {
-                            json = new JSONObject(response);
-                            ruolo = json.getString("Ruolo");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        System.out.println(ruolo);
-                        Toast.makeText(MainActivity.this, ruolo, Toast.LENGTH_SHORT).show();
-                        if (ruolo.equals("Studente")) {
-                            Studente();
-                        } else if (ruolo.equals("Docente")) {
-                            Docente();
-                        } else {
-                            Toast.makeText(MainActivity.this, "Username o/e password non corretti", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                    }
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("username", username);
-                params.put("password", password);
-                return params;
-            }
-        };
-        //imposto un numero di tentativi in caso di com.android.volley.TimeoutError
-        postRequest.setRetryPolicy(new DefaultRetryPolicy(1000, 10, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-
-        MySingleton.getInstance(this).addToRequestQueue(postRequest);
-    }
-
 
     public void Docente() {
         Intent i = new Intent(MainActivity.this, DocenteActivity.class);
@@ -137,6 +89,5 @@ public class MainActivity extends AppCompatActivity {
         Pair p = new Pair(username, password);
         return p;
     }
-
 }
 

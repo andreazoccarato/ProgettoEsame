@@ -15,6 +15,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.andrea.progettoesame.InterazioneServer;
 import com.example.andrea.progettoesame.MySingleton;
 import com.example.andrea.progettoesame.R;
 
@@ -62,10 +63,12 @@ public class ListaStudentiFragment extends Fragment {
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putString("param1", "Gestione generale");
-                bundle.putString("param2", "" + "");
+                bundle.putString("param2", "");
+                bundle.putString("param3", "");
+                bundle.putString("param4", "" + codiceClasse);
                 MenuAzioniFragment dialogFragment = new MenuAzioniFragment();
                 dialogFragment.setArguments(bundle);
-                dialogFragment.show(getFragmentManager(), "Gestione generale");
+                dialogFragment.show(getFragmentManager(), "DIALOG");
             }
         });
 
@@ -80,7 +83,7 @@ public class ListaStudentiFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(adapter);
 
-        String url = "http://192.168.1.104:8000/api/getStudentiByClasse";
+        String url = "http://" + InterazioneServer.URL_SERVER + "/api/getStudentiByClasse";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override

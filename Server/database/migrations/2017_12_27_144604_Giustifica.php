@@ -4,15 +4,14 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Giustifica extends Migration
-{
+class Giustifica extends Migration {
+
     /**
      * Run the migrations.
      *
      * @return void
      */
-    public function up()
-    {
+    public function up() {
         Schema::create('Giustifica', function($table) {
             $table->increments('IdGiustifica');
             $table->date('Data');
@@ -30,8 +29,8 @@ class Giustifica extends Migration
      *
      * @return void
      */
-    public function down()
-    {
+    public function down() {
         Schema::drop('Giustifica');
     }
+
 }

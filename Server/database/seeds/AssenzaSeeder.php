@@ -42,6 +42,18 @@ class AssenzaSeeder extends Seeder {
             'Orario' => '000000000111111111111111',
             'Giustificato' => 'false'
         ));
+        DB::table('Assenza')->insert(array(
+            'CFStudente' => 'ZCCNDR99S22F241A',
+            'Data' => '27/04/2018',
+            'Orario' => '111111111111111111111111',
+            'Giustificato' => 'false'
+        ));
+        DB::table('Assenza')->insert(array(
+            'CFStudente' => 'ZCCNDR99S22F241A',
+            'Data' => '18/05/2018',
+            'Orario' => '000000000111111111111111',
+            'Giustificato' => 'false'
+        ));
     }
 
 }

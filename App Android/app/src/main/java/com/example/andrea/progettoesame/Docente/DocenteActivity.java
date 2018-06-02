@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
 import android.support.v4.util.Pair;
@@ -17,8 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.andrea.progettoesame.Docente.GetQrCodeFragment;
+import com.example.andrea.progettoesame.InterazioneServer;
 import com.example.andrea.progettoesame.MainFragment;
 import com.example.andrea.progettoesame.ProfiloFragment;
 import com.example.andrea.progettoesame.R;
@@ -58,12 +61,7 @@ public class DocenteActivity extends AppCompatActivity implements
 
         System.out.println(username);
         System.out.println(password);
-
-        /**
-         textView= (TextView) findViewById(R.id.header_name);
-         textView.setText(username);
-         */
-
+        
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.mainFrame, new MainFragment());
         ft.commit();
@@ -82,7 +80,6 @@ public class DocenteActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.docente, menu);
         return true;
     }
@@ -90,9 +87,18 @@ public class DocenteActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
+        Fragment fragment = null;
         if (id == R.id.action_settings) {
-            return true;
+            fragment = new ProfiloFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("tipologia", "docente");
+            fragment.setArguments(bundle);
+        }
+
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.mainFrame, fragment);
+            ft.commit();
         }
 
         return super.onOptionsItemSelected(item);
@@ -109,6 +115,9 @@ public class DocenteActivity extends AppCompatActivity implements
             fragment = new ClassiFragment();
         } else if (id == R.id.nav_profilo) {
             fragment = new ProfiloFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("tipologia", "docente");
+            fragment.setArguments(bundle);
         }
 
         if (fragment != null) {
@@ -131,5 +140,52 @@ public class DocenteActivity extends AppCompatActivity implements
     public Pair<String, String> getData() {
         Pair p = new Pair(username, password);
         return p;
+    }
+
+    public void onClickAzione(View view) {
+        int id = view.getId();
+        Fragment fragment = null;
+        FragmentManager fm = getSupportFragmentManager();
+        MenuAzioniFragment dialog = (MenuAzioniFragment) fm.findFragmentByTag("DIALOG");
+        dialog.dismiss();
+        InterazioneServer interazioneServer = new InterazioneServer(this, username, password);
+        String codF = dialog.getCodFStud();
+        Bundle bundle = new Bundle();
+        bundle.putString("CodiceFiscale", codF);
+        switch (id) {
+            case R.id.azioni_studente_voto:
+                fragment = new AggiungiVotoFragment();
+                fragment.setArguments(bundle);
+                break;
+            case R.id.azioni_studente_assenza:
+                interazioneServer.setPresenza("presenza", codF);
+                break;
+            case R.id.azioni_studente_presenza:
+                interazioneServer.setPresenza("assenza", codF);
+                break;
+            case R.id.azioni_studente_giustifica:
+                fragment = new GiustificaFragment();
+                fragment.setArguments(bundle);
+                break;
+            case R.id.azioni_generali_evento:
+                fragment = new AggiungiEventoFragment();
+                bundle.putString("codiceClasse", dialog.getCodClasse());
+                fragment.setArguments(bundle);
+                break;
+            case R.id.azioni_generali_firma:
+                fragment = new FirmaFragment();
+                fragment.setArguments(bundle);
+                bundle.putString("codiceClasse", dialog.getCodClasse());
+                break;
+            case R.id.azioni_generali_cancella_firma:
+                interazioneServer.cancellaFirma();
+                break;
+        }
+
+        if (fragment != null) {
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.mainFrame, fragment);
+            ft.commit();
+        }
     }
 }

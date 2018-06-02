@@ -25,13 +25,14 @@ class qrCodeController extends Controller {
 
         $username = $request->input('username');
         $password = $request->input('password');
+        $clSez = $request->input('password');
 
         $result = $this->database->requestQrCode($username, $password);
 
         if (count($result) == 0) {
             $idDoc = $this->database->getIdDocente($username, $password);
             $scuola = $this->database->getScuola($username, $password);
-            $classe = $this->database->getClasse($username, $password);
+            $classe = $this->database->getClasseByClsezAndScuola($clSez, $scuola);
             $time = date("H", time());
             $data = date("j/m/Y", time());
             $random = rand(1000, 10000);

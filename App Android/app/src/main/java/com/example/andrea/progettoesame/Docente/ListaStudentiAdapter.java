@@ -74,9 +74,10 @@ public class ListaStudentiAdapter extends RecyclerView.Adapter<ListaStudentiAdap
             bundle.putString("param1", "Gestione_studente");
             bundle.putString("param2", "" + studenti.get(position).getCodF());
             bundle.putString("param3", "" + studenti.get(position).getCognome() + " " + studenti.get(position).getNome());
+            bundle.putString("param4", "");
             MenuAzioniFragment dialogFragment = new MenuAzioniFragment();
             dialogFragment.setArguments(bundle);
-            dialogFragment.show(manager, "Gestione studente");
+            dialogFragment.show(manager, "DIALOG");
         }
     }
 }

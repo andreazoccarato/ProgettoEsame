@@ -15,8 +15,8 @@ class Firma extends Migration {
             $table->increments('CodiceFirma');
             $table->text('Data');
             $table->text('CFDocente');
-            $table->text('Orario');
             $table->integer('IdLezione');
+            $table->integer('nOre');
             $table->foreign('CFDocente')->references('CodiceFiscale')->on('Docente');
             $table->foreign('IdLezione')->references('ID')->on('Lezione');
         });

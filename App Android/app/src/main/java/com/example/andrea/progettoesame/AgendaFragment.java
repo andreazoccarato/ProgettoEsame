@@ -141,7 +141,7 @@ public class AgendaFragment extends Fragment {
         final TextView textViewLezioni = (TextView) view.findViewById(R.id.agenda_fragment_textView_lezioni);
         eventi = new ArrayList<>();
 
-        String url = "http://192.168.1.104:8000/api/getEventi";
+        String url = "http://" + InterazioneServer.URL_SERVER + "/api/getEventi";
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -219,7 +219,6 @@ public class AgendaFragment extends Fragment {
                 return params;
             }
         };
-        //imposto un numero di tentativi in caso di com.android.volley.TimeoutError
         postRequest.setRetryPolicy(new DefaultRetryPolicy(1000, 10, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         MySingleton.getInstance(getContext()).addToRequestQueue(postRequest);
     }

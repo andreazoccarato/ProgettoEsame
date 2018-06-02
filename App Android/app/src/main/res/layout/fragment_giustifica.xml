@@ -1,0 +1,44 @@
+<LinearLayout xmlns:adroid="http://schemas.android.com/apk/res/android"
+    adroid:layout_width="match_parent"
+    adroid:layout_height="match_parent"
+    adroid:orientation="vertical">
+
+    <TextView
+        adroid:id="@+id/lista_studenti_textView"
+        adroid:layout_width="wrap_content"
+        adroid:layout_height="wrap_content"
+        adroid:layout_gravity="center"
+        adroid:layout_marginTop="55dp"
+        adroid:text="Giustifica"
+        adroid:textColor="@color/blu"
+        adroid:textSize="35dp"
+        adroid:textStyle="bold" />
+
+    <Button
+        adroid:id="@+id/giustifica_bottone_aggiorna"
+        adroid:layout_width="wrap_content"
+        adroid:layout_height="wrap_content"
+        adroid:layout_gravity="center"
+        adroid:layout_marginTop="10dp"
+        adroid:text="Aggiorna"
+        adroid:theme="@style/AppTheme.Button" />
+
+    <TextView
+        adroid:id="@+id/giustifica_textView"
+        adroid:layout_width="wrap_content"
+        adroid:layout_height="wrap_content"
+        adroid:layout_gravity="center"
+        adroid:layout_marginTop="10dp"
+        adroid:textSize="20dp"
+        adroid:textStyle="bold" />
+
+    <android.support.v7.widget.RecyclerView
+        adroid:id="@+id/giustifica_recyclerView"
+        adroid:layout_width="match_parent"
+        adroid:layout_height="wrap_content"
+        adroid:layout_marginTop="10dp">
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>
+
