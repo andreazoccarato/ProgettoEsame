@@ -31,7 +31,7 @@ import java.util.Map;
 
 public class InterazioneServer {
 
-    public static final String URL_SERVER = "192.168.137.60:8000";
+    public static final String URL_SERVER = "192.168.1.104:8000";
     private Context context;
     private String username;
     private String password;
